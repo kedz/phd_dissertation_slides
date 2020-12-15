@@ -21,6 +21,7 @@
 \usepackage{lmodern}
 \usepackage{booktabs} 
 \usepackage{multirow}
+\usepackage{colortbl}
 
 \DeclareMathOperator*{\argmin}{arg\,min}
 
@@ -28,6 +29,17 @@
 %%%  \usepackage{stmaryrd}
 %%%  \usepackage{tikz-3dplot}
 \usetikzlibrary{calc}
+
+\tikzset{weird fill/.style={append after command={
+   \pgfextra
+        \draw[sharp corners, fill=#1]% 
+    (\tikzlastnode.west)%  
+    [rounded corners=3pt] |- (\tikzlastnode.north)% 
+    [rounded corners=1pt] -| (\tikzlastnode.east)% 
+    [rounded corners=1pt] |- (\tikzlastnode.south)% 
+    [rounded corners=3pt] -| (\tikzlastnode.west); 
+   \endpgfextra}}}
+
 %%%  \usepackage{dsfont}
 %%%  
 %%%  \newcommand\T{{\mathpalette\raiseT\intercal}}
@@ -42,7 +54,6 @@
 %%%  \usepackage{graphicx} % Allows including images
 %%%  
 %%%  \usepackage{xcolor}
-%%%  \usepackage{colortbl}
 %%%  \usepackage{xspace}
 %%%  \usepackage{bbm}
 %%%  \usepackage{amsfonts}
@@ -79,15 +90,7 @@
 %%%  
 %%%  
 %%%  
-%%%  \tikzset{weird fill/.style={append after command={
-%%%     \pgfextra
-%%%          \draw[sharp corners, fill=#1]% 
-%%%      (\tikzlastnode.west)%  
-%%%      [rounded corners=3pt] |- (\tikzlastnode.north)% 
-%%%      [rounded corners=1pt] -| (\tikzlastnode.east)% 
-%%%      [rounded corners=1pt] |- (\tikzlastnode.south)% 
-%%%      [rounded corners=3pt] -| (\tikzlastnode.west); 
-%%%     \endpgfextra}}}
+
                   \title[Sal. Est. and Faithful Gen.]{Salience Estimation and Faithful Generation}
                   \subtitle{Modeling Methods for Text Summarization and Generation}
 
@@ -125,22 +128,14 @@ Department of Computer Science\\
 \input{sections/2_experiments.tex}
 \input{sections/2_conclusion.tex}
 
-%%% 
-%%% 
-%%% 
-%%% 
-%%% 
-%%% 
-%%% 
-%%% %\input{extsum.tex}
-%%% 
-%%% \section{Salience Estimation with Structured Content Selection Models}
-%%% 
-%%% 
-%%% \input{sections/3_task.tex}
-%%% \input{sections/3_models.tex}
-%%% \input{sections/3_experiments.tex}
-%%% 
+\section{Salience Estimation with Structured Content Selection Models}
+  
+\input{sections/3_task.tex}
+\input{sections/3_models.tex}
+\input{sections/3_experiments.tex}
+
+
+
 %%% 
 %%% 
 %%% \section{Faithful and Controllable Generation}

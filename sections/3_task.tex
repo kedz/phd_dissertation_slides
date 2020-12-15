@@ -1,0 +1,536 @@
+\subsection{Task}
+
+\begin{frame}[fragile]{Query Focused, Sentence Extractive, Stream Summarization}
+\resizebox{0.99\textwidth}{!}{
+  \begin{tikzpicture}
+    \tikzstyle{sent}=[align=left]
+    %\draw (0,8) rectangle (10,0);
+    \draw[red] (0,8.5) rectangle (18,0);
+ 
+    \node at (7.45,8.1) [draw,rounded corners,very thick] 
+    {\tiny ~ \includegraphics[scale=.02]{images/strm/magnify} 
+     ~ ``Hurricane Sandy''};
+    %\draw[orange!20,fill=orange!20] (0,7.5) rectangle (1.7,4);
+    %\draw[orange!20,fill=orange!20] (0,3.95) rectangle (1.7,.45);
+ 
+    \draw[white,top color=orange,bottom color=orange!20,shading=axis,
+          shading angle=16] (0,2) -- (0,0) -- (1.7,0) -- 
+            (1.7,2) -- (0,2) -- cycle; 
+    \draw[white,top color=orange,bottom color=orange!20,shading=axis,
+          shading angle=165] (0,5) -- (0,2) -- (.85,1) -- (1.7,2) -- 
+            (1.7,5) -- (0,5) -- cycle; 
+
+    \draw[white,top color=orange,bottom color=orange!20,shading=axis,
+          shading angle=25] (0,8) -- (0,5) -- (0.85,4) -- (1.7,5) -- 
+            (1.7,8) -- (0,8) -- cycle;
+    \draw[white,top color=orange!90,bottom color=orange!20,shading=axis,
+          shading angle=25] (0,8) -- (0.85,7) -- (1.7,8) -- (0,8) -- cycle;
+
+    \node[rotate=90,text=white] at (.85,5.8) {\Huge 2:00};
+    \node[rotate=90,text=white] at (.85,2.8) {\Huge 3:00};
+
+  \node (f) at (2,6.55) {
+  \begin{tikzpicture}[transform canvas={scale=0.2}]
+    \tikzstyle{sent}=[align=left]
+    \tikzstyle{doc}=[rectangle,rounded corners,draw=black, very thick]
+
+    \draw (-.02,4.75) node  [
+    very thick,
+    weird fill=blue!10,
+    text width=0.15cm,align=center,text height=1.8cm] {};
+    \draw[doc] (-.25,5.80) rectangle (9.5, 3.70); 
+    \node[sent,left] at (9.5, 5.5) {\fontsize{7}{11}\selectfont ... two bombs went off at the 
+        finish line of the Boston  Marathon.};
+    \node[sent,left] at (9.5, 5) {\fontsize{7}{11}\selectfont Many of the injured were 
+        reportedly bystanders.};
+    \node[sent,left] at (9.5, 4.5) {\fontsize{7}{11}\selectfont The blasts reportedly happened 
+        across the street from the Lenox Hotel.};
+    \node[sent,left] at (9.5, 4) {\fontsize{7}{11}\selectfont We will update you on any 
+        breaking news we hear about this.};
+    \node[rotate=90] at (0,4.75) {\tiny 3:05 pm} ;
+
+    \draw (-.02,2.5) node  [
+    very thick,
+    weird fill=blue!10,
+    text width=0.15cm,align=center,text height=1.3cm] {};
+    \draw[doc] (-.25,3.30) rectangle (9.5, 1.70); 
+    \node[sent,left] at (9.5, 3) {\fontsize{7}{11}\selectfont ... two bombs were detonated at 
+        the race's finish line, killing and injuring many.};
+    \node[sent,left] at (9.5, 2.5) {\fontsize{7}{11}\selectfont ... two more explosive devices
+         have been found.};
+    \node[sent,left] at (9.5, 2.0) {\fontsize{7}{11}\selectfont The White House says President 
+        Obama has been notified about the explosions.};
+    \node[rotate=90] at (0,2.5) {\tiny 3:45 pm} ;
+
+    \draw (-.02,0.75) node  [
+    very thick,
+    weird fill=blue!10,
+    text width=0.15cm,align=center,text height=0.8cm] {};
+    \node[rotate=90] at (0,0.75) {\tiny 3:55 pm} ;
+    \draw[doc] (-.25,1.30) rectangle (9.5,.2); 
+    \node[sent,left] at (9.5, 1.0) {\fontsize{7}{11}\selectfont NBC news reports that 
+        ``multiple explosive devices'' have been found in Boston.};
+    \node[sent,left] at (9.5, 0.5) {\fontsize{7}{11}\selectfont Boston police report
+        that two people were killed and at least 22 injured.};
+
+
+  \end{tikzpicture}
+  };
+ \node (c) at (2,5.05) {
+  \begin{tikzpicture}[transform canvas={scale=0.2}]
+    \tikzstyle{sent}=[align=left]
+    \tikzstyle{doc}=[rectangle,rounded corners,draw=black, very thick]
+
+
+    \draw (-.02,6.75) node  [
+    very thick,
+    weird fill=blue!10,
+    text width=0.15cm,align=center,text height=0.8cm] {};
+    \draw[doc] (-.25,7.30) rectangle (9.5, 6.20); 
+    \node[sent,left] at (9.5, 7) {\fontsize{7}{11}\selectfont Moments ago there were 
+        explosions near the finish line of the Boston Marathon.}; 
+    \node[sent,left] at (9.5, 6.5) {\fontsize{7}{11}\selectfont It has not been confirmed, 
+        but its quite likely these were bombings.};
+    \node[rotate=90] at (0,6.75) {\tiny 3:00 pm} ;
+    
+    \draw (-.02,4.75) node  [
+    very thick,
+    weird fill=blue!10,
+    text width=0.15cm,align=center,text height=1.8cm] {};
+    \draw[doc] (-.25,5.80) rectangle (9.5, 3.70); 
+    \node[sent,left] at (9.5, 5.5) {\fontsize{7}{11}\selectfont ... two bombs went off at the 
+        finish line of the Boston  Marathon.};
+    \node[sent,left] at (9.5, 5) {\fontsize{7}{11}\selectfont Many of the injured were 
+        reportedly bystanders.};
+    \node[sent,left] at (9.5, 4.5) {\fontsize{7}{11}\selectfont The blasts reportedly happened 
+        across the street from the Lenox Hotel.};
+    \node[sent,left] at (9.5, 4) {\fontsize{7}{11}\selectfont We will update you on any 
+        breaking news we hear about this.};
+    \node[rotate=90] at (0,4.75) {\tiny 3:05 pm} ;
+
+    \draw (-.02,2.5) node  [
+    very thick,
+    weird fill=blue!10,
+    text width=0.15cm,align=center,text height=1.3cm] {};
+    \draw[doc] (-.25,3.30) rectangle (9.5, 1.70); 
+    \node[sent,left] at (9.5, 3) {\fontsize{7}{11}\selectfont ... two bombs were detonated at 
+        the race's finish line, killing and injuring many.};
+    \node[sent,left] at (9.5, 2.5) {\fontsize{7}{11}\selectfont ... two more explosive devices
+         have been found.};
+    \node[sent,left] at (9.5, 2.0) {\fontsize{7}{11}\selectfont The White House says President 
+        Obama has been notified about the explosions.};
+    \node[rotate=90] at (0,2.5) {\tiny 3:45 pm} ;
+
+    \draw (-.02,0.75) node  [
+    very thick,
+    weird fill=blue!10,
+    text width=0.15cm,align=center,text height=0.8cm] {};
+    \node[rotate=90] at (0,0.75) {\tiny 3:55 pm} ;
+    \draw[doc] (-.25,1.30) rectangle (9.5,.2); 
+    \node[sent,left] at (9.5, 1.0) {\fontsize{7}{11}\selectfont NBC news reports that 
+        ``multiple explosive devices'' have been found in Boston.};
+    \node[sent,left] at (9.5, 0.5) {\fontsize{7}{11}\selectfont Boston police report
+        that two people were killed and at least 22 injured.};
+
+
+  \end{tikzpicture}
+  };
+
+  \node (a) at (2,3.5) {
+  \begin{tikzpicture}[transform canvas={scale=0.2}]
+    \tikzstyle{sent}=[align=left]
+    \tikzstyle{doc}=[rectangle,rounded corners,draw=black, very thick]
+
+    \draw[black,rounded corners,very thick,dotted] (-0.5,7.5) rectangle (9.75,0);
+
+    \draw (-.02,6.75) node  [
+    very thick,
+    weird fill=blue!10,
+    text width=0.15cm,align=center,text height=0.8cm] {};
+    \draw[doc] (-.25,7.30) rectangle (9.5, 6.20); 
+    \node[sent,left] at (9.5, 7) {\fontsize{7}{11}\selectfont Moments ago there were 
+        explosions near the finish line of the Boston Marathon.}; 
+    \node[sent,left] at (9.5, 6.5) {\fontsize{7}{11}\selectfont It has not been confirmed, 
+        but its quite likely these were bombings.};
+    \node[rotate=90] at (0,6.75) {\tiny 3:00 pm} ;
+    
+    \draw (-.02,4.75) node  [
+    very thick,
+    weird fill=blue!10,
+    text width=0.15cm,align=center,text height=1.8cm] {};
+    \draw[doc] (-.25,5.80) rectangle (9.5, 3.70); 
+    \node[sent,left] at (9.5, 5.5) {\fontsize{7}{11}\selectfont ... two bombs went off at the 
+        finish line of the Boston  Marathon.};
+    \node[sent,left] at (9.5, 5) {\fontsize{7}{11}\selectfont Many of the injured were 
+        reportedly bystanders.};
+    \node[sent,left] at (9.5, 4.5) {\fontsize{7}{11}\selectfont The blasts reportedly happened 
+        across the street from the Lenox Hotel.};
+    \node[sent,left] at (9.5, 4) {\fontsize{7}{11}\selectfont We will update you on any 
+        breaking news we hear about this.};
+    \node[rotate=90] at (0,4.75) {\tiny 3:05 pm} ;
+
+    \draw (-.02,2.5) node  [
+    very thick,
+    weird fill=blue!10,
+    text width=0.15cm,align=center,text height=1.3cm] {};
+    \draw[doc] (-.25,3.30) rectangle (9.5, 1.70); 
+    \node[sent,left] at (9.5, 3) {\fontsize{7}{11}\selectfont ... two bombs were detonated at 
+        the race's finish line, killing and injuring many.};
+    \node[sent,left] at (9.5, 2.5) {\fontsize{7}{11}\selectfont ... two more explosive devices
+         have been found.};
+    \node[sent,left] at (9.5, 2.0) {\fontsize{7}{11}\selectfont The White House says President 
+        Obama has been notified about the explosions.};
+    \node[rotate=90] at (0,2.5) {\tiny 3:45 pm} ;
+
+    \draw (-.02,0.75) node  [
+    very thick,
+    weird fill=blue!10,
+    text width=0.15cm,align=center,text height=0.8cm] {};
+    \node[rotate=90] at (0,0.75) {\tiny 3:55 pm} ;
+    \draw[doc] (-.25,1.30) rectangle (9.5,.2); 
+    \node[sent,left] at (9.5, 1.0) {\fontsize{7}{11}\selectfont NBC news reports that 
+        ``multiple explosive devices'' have been found in Boston.};
+    \node[sent,left] at (9.5, 0.5) {\fontsize{7}{11}\selectfont Boston police report
+        that two people were killed and at least 22 injured.};
+
+
+  \end{tikzpicture}
+  };
+
+ \node (d) at (2,2.00) {
+  \begin{tikzpicture}[transform canvas={scale=0.2}]
+    \tikzstyle{sent}=[align=left]
+    \tikzstyle{doc}=[rectangle,rounded corners,draw=black, very thick]
+
+
+    \draw (-.02,6.75) node  [
+    very thick,
+    weird fill=blue!10,
+    text width=0.15cm,align=center,text height=0.8cm] {};
+    \draw[doc] (-.25,7.30) rectangle (9.5, 6.20); 
+    \node[sent,left] at (9.5, 7) {\fontsize{7}{11}\selectfont Moments ago there were 
+        explosions near the finish line of the Boston Marathon.}; 
+    \node[sent,left] at (9.5, 6.5) {\fontsize{7}{11}\selectfont It has not been confirmed, 
+        but its quite likely these were bombings.};
+    \node[rotate=90] at (0,6.75) {\tiny 3:00 pm} ;
+    
+    \draw (-.02,4.75) node  [
+    very thick,
+    weird fill=blue!10,
+    text width=0.15cm,align=center,text height=1.8cm] {};
+    \draw[doc] (-.25,5.80) rectangle (9.5, 3.70); 
+    \node[sent,left] at (9.5, 5.5) {\fontsize{7}{11}\selectfont ... two bombs went off at the 
+        finish line of the Boston  Marathon.};
+    \node[sent,left] at (9.5, 5) {\fontsize{7}{11}\selectfont Many of the injured were 
+        reportedly bystanders.};
+    \node[sent,left] at (9.5, 4.5) {\fontsize{7}{11}\selectfont The blasts reportedly happened 
+        across the street from the Lenox Hotel.};
+    \node[sent,left] at (9.5, 4) {\fontsize{7}{11}\selectfont We will update you on any 
+        breaking news we hear about this.};
+    \node[rotate=90] at (0,4.75) {\tiny 3:05 pm} ;
+
+    \draw (-.02,2.5) node  [
+    very thick,
+    weird fill=blue!10,
+    text width=0.15cm,align=center,text height=1.3cm] {};
+    \draw[doc] (-.25,3.30) rectangle (9.5, 1.70); 
+    \node[sent,left] at (9.5, 3) {\fontsize{7}{11}\selectfont ... two bombs were detonated at 
+        the race's finish line, killing and injuring many.};
+    \node[sent,left] at (9.5, 2.5) {\fontsize{7}{11}\selectfont ... two more explosive devices
+         have been found.};
+    \node[sent,left] at (9.5, 2.0) {\fontsize{7}{11}\selectfont The White House says President 
+        Obama has been notified about the explosions.};
+    \node[rotate=90] at (0,2.5) {\tiny 3:45 pm} ;
+
+    \draw (-.02,0.75) node  [
+    very thick,
+    weird fill=blue!10,
+    text width=0.15cm,align=center,text height=0.8cm] {};
+    \node[rotate=90] at (0,0.75) {\tiny 3:55 pm} ;
+    \draw[doc] (-.25,1.30) rectangle (9.5,.2); 
+    \node[sent,left] at (9.5, 1.0) {\fontsize{7}{11}\selectfont NBC news reports that 
+        ``multiple explosive devices'' have been found in Boston.};
+    \node[sent,left] at (9.5, 0.5) {\fontsize{7}{11}\selectfont Boston police report
+        that two people were killed and at least 22 injured.};
+
+
+  \end{tikzpicture}
+  };
+
+
+
+
+\node (e) at (2,0.2) {
+  \begin{tikzpicture}[transform canvas={scale=0.2}]
+    \tikzstyle{sent}=[align=left]
+    \tikzstyle{doc}=[rectangle,rounded corners,draw=black, very thick]
+
+    \draw (-.02,8.25) node  [
+    very thick,
+    weird fill=blue!10,
+    text width=0.15cm,align=center,text height=0.8cm] {};
+    \draw[doc] (-.25,8.8) rectangle (9.5, 7.70); 
+    \node[sent,left] at (9.5, 8.5) {\fontsize{7}{11}\selectfont Moments ago there were 
+        explosions near the finish line of the Boston Marathon.}; 
+    \node[sent,left] at (9.5, 8) {\fontsize{7}{11}\selectfont It has not been confirmed, 
+        but its quite likely these were bombings.};
+    \node[rotate=90] at (0,8.25) {\tiny 3:00 pm} ;
+ 
+    \draw (-.02,6.75) node  [
+    very thick,
+    weird fill=blue!10,
+    text width=0.15cm,align=center,text height=0.8cm] {};
+    \draw[doc] (-.25,7.30) rectangle (9.5, 6.20); 
+    \node[sent,left] at (9.5, 7) {\fontsize{7}{11}\selectfont Moments ago there were 
+        explosions near the finish line of the Boston Marathon.}; 
+    \node[sent,left] at (9.5, 6.5) {\fontsize{7}{11}\selectfont It has not been confirmed, 
+        but its quite likely these were bombings.};
+    \node[rotate=90] at (0,6.75) {\tiny 3:00 pm} ;
+    
+    \draw (-.02,4.75) node  [
+    very thick,
+    weird fill=blue!10,
+    text width=0.15cm,align=center,text height=1.8cm] {};
+    \draw[doc] (-.25,5.80) rectangle (9.5, 3.70); 
+    \node[sent,left] at (9.5, 5.5) {\fontsize{7}{11}\selectfont ... two bombs went off at the 
+        finish line of the Boston  Marathon.};
+    \node[sent,left] at (9.5, 5) {\fontsize{7}{11}\selectfont Many of the injured were 
+        reportedly bystanders.};
+    \node[sent,left] at (9.5, 4.5) {\fontsize{7}{11}\selectfont The blasts reportedly happened 
+        across the street from the Lenox Hotel.};
+    \node[sent,left] at (9.5, 4) {\fontsize{7}{11}\selectfont We will update you on any 
+        breaking news we hear about this.};
+    \node[rotate=90] at (0,4.75) {\tiny 3:05 pm} ;
+
+    \draw (-.02,2.5) node  [
+    very thick,
+    weird fill=blue!10,
+    text width=0.15cm,align=center,text height=1.3cm] {};
+    \draw[doc] (-.25,3.30) rectangle (9.5, 1.70); 
+    \node[sent,left] at (9.5, 3) {\fontsize{7}{11}\selectfont ... two bombs were detonated at 
+        the race's finish line, killing and injuring many.};
+    \node[sent,left] at (9.5, 2.5) {\fontsize{7}{11}\selectfont ... two more explosive devices
+         have been found.};
+    \node[sent,left] at (9.5, 2.0) {\fontsize{7}{11}\selectfont The White House says President 
+        Obama has been notified about the explosions.};
+    \node[rotate=90] at (0,2.5) {\tiny 3:45 pm} ;
+
+    \draw (-.02,0.75) node  [
+    very thick,
+    weird fill=blue!10,
+    text width=0.15cm,align=center,text height=0.8cm] {};
+    \node[rotate=90] at (0,0.75) {\tiny 3:55 pm} ;
+    \draw[doc] (-.25,1.30) rectangle (9.5,.2); 
+    \node[sent,left] at (9.5, 1.0) {\fontsize{7}{11}\selectfont NBC news reports that 
+        ``multiple explosive devices'' have been found in Boston.};
+    \node[sent,left] at (9.5, 0.5) {\fontsize{7}{11}\selectfont Boston police report
+        that two people were killed and at least 22 injured.};
+
+
+  \end{tikzpicture}
+  };
+
+
+
+
+
+
+\only<1>{
+    \draw[dashed] (1.90,5) -- (4.8,7.5);
+    \draw[dashed] (3.95,5) -- (8.9,7.5);
+    \draw[dashed] (1.90,3.5) -- (4.8,4.5);
+    \draw[dashed] (3.95,3.5) -- (8.9,4.5);
+
+   \node (b) at (5,4.5) {
+  \begin{tikzpicture}[transform canvas={scale=0.4}]
+    \tikzstyle{sent}=[align=left]
+    \tikzstyle{doc}=[rectangle,rounded corners,draw=black, very thick]
+
+    \draw[black,rounded corners,very thick,fill=white] (-0.5,7.5) rectangle (9.75,0);
+
+    \draw (-.02,6.75) node  [
+    very thick,
+    weird fill=blue!10,
+    text width=0.15cm,align=center,text height=0.8cm] {};
+    \draw[doc] (-.25,7.30) rectangle (9.5, 6.20); 
+    \node[sent,left] at (9.5, 7) {\fontsize{7}{11}\selectfont Moments ago there were 
+        explosions near the finish line of the Boston Marathon.}; 
+    \node[sent,left] at (9.5, 6.5) {\fontsize{7}{11}\selectfont It has not been confirmed, 
+        but its quite likely these were bombings.};
+    \node[rotate=90] at (0,6.75) {\tiny 3:00 pm} ;
+    
+    \draw (-.02,4.75) node  [
+    very thick,
+    weird fill=blue!10,
+    text width=0.15cm,align=center,text height=1.8cm] {};
+    \draw[doc] (-.25,5.80) rectangle (9.5, 3.70); 
+    \node[sent,left] at (9.5, 5.5) {\fontsize{7}{11}\selectfont ... two bombs went off at the 
+        finish line of the Boston  Marathon.};
+    \node[sent,left] at (9.5, 5) {\fontsize{7}{11}\selectfont Many of the injured were 
+        reportedly bystanders.};
+    \node[sent,left] at (9.5, 4.5) {\fontsize{7}{11}\selectfont The blasts reportedly happened 
+        across the street from the Lenox Hotel.};
+    \node[sent,left] at (9.5, 4) {\fontsize{7}{11}\selectfont We will update you on any 
+        breaking news we hear about this.};
+    \node[rotate=90] at (0,4.75) {\tiny 3:05 pm} ;
+
+    \draw (-.02,2.5) node  [
+    very thick,
+    weird fill=blue!10,
+    text width=0.15cm,align=center,text height=1.3cm] {};
+    \draw[doc] (-.25,3.30) rectangle (9.5, 1.70); 
+    \node[sent,left] at (9.5, 3) {\fontsize{7}{11}\selectfont ... two bombs were detonated at 
+        the race's finish line, killing and injuring many.};
+    \node[sent,left] at (9.5, 2.5) {\fontsize{7}{11}\selectfont ... two more explosive devices
+         have been found.};
+    \node[sent,left] at (9.5, 2.0) {\fontsize{7}{11}\selectfont The White House says President 
+        Obama has been notified about the explosions.};
+    \node[rotate=90] at (0,2.5) {\tiny 3:45 pm} ;
+
+    \draw (-.02,0.75) node  [
+    very thick,
+    weird fill=blue!10,
+    text width=0.15cm,align=center,text height=0.8cm] {};
+    \node[rotate=90] at (0,0.75) {\tiny 3:55 pm} ;
+    \draw[doc] (-.25,1.30) rectangle (9.5,.2); 
+    \node[sent,left] at (9.5, 1.0) {\fontsize{7}{11}\selectfont NBC news reports that 
+        ``multiple explosive devices'' have been found in Boston.};
+    \node[sent,left] at (9.5, 0.5) {\fontsize{7}{11}\selectfont Boston police report
+        that two people were killed and at least 22 injured.};
+
+
+  \end{tikzpicture}
+  };
+}
+
+
+\uncover<2>{
+\node[anchor=north west,text width=12cm] at (5,7) {
+\begin{itemize}
+\item Summarization system must monitor a continuously updating stream of news documents, and extract updates related to the query.
+    \vspace{10pt}
+\item Update Summary --- a continuously updated collection of extracted 
+    sentences that summarize the event.
+    \vspace{10pt}
+
+\item Updates --- an extracted sentence from the stream; updates should contain
+    novel and timely informtation.
+    \vspace{10pt}
+
+\item Salience --- decreases over time
+\end{itemize}
+};
+}
+
+\uncover<3,4>{
+\node[anchor=north west,text width=12cm] at (5,8) {
+    \begin{itemize}
+        \item Nuggets --- atomic facts, essential to the query
+        \vspace{5pt}
+        \begin{itemize}
+            \item A good update summary contains mostly ``nugget'' information
+            \vspace{5pt}
+            \item Nuggets are manually extracted from Wikipedia
+        \end{itemize}
+        \vspace{10pt}
+        \item Example Nuggets for query "Hurricane Sandy"
+        \vspace{5pt}
+        %\begin{itemize}
+            \colorbox{red!20}{\small [A] At least 80 homes were completely destroyed by fire in the Breezy Point, Queens} \\
+            \colorbox{green!20}{\small [B] Seven subway tunnels under the East River flooded} \\
+            \colorbox{blue!20}{\small [C] Sandy left power outages} \\
+       % \vspace{5pt}
+       %     \item Example A
+       % \vspace{5pt}
+       %     \item Example A
+        %\end{itemize}
+
+        \vspace{10pt}
+        \item Extracted updates should ``contain'' novel nuggets \\
+      \textit{\small New York City officials spent the day grappling with the damage from Sandy, the Atlantic superstorm that killed 10 people, \colorbox{red!20}{sparked a fire that destroyed 111 homes in Queens,} \colorbox{green!20}{flooded tunnels of the biggest U.S. transit system} and \colorbox{blue!20}{left more than 750,000 customers without power.}}
+
+
+    \end{itemize}
+};
+            }
+            \uncover<4->{
+            \node[inner sep=1pt,fill=yellow,text=red,draw=red,font=\tiny] at (4.1,7.1) {A};
+            \node[inner sep=1pt,fill=yellow,text=red,draw=red,font=\tiny] at (4.5,7.1) {B};
+            \node[inner sep=1pt,fill=yellow,text=red,draw=red,font=\tiny] at (4.1,6.7) {C};
+
+            \node[inner sep=1pt,fill=yellow,text=red,draw=red,font=\tiny] at (4.1,6.1) {A};
+            \node[inner sep=1pt,fill=yellow,text=red,draw=red,font=\tiny] at (4.1,5.7) {B};
+            \node[inner sep=1pt,fill=yellow,text=red,draw=red,font=\tiny] at (4.1,4.1) {A};
+            \node[inner sep=1pt,fill=yellow,text=red,draw=red,font=\tiny] at (4.5,4.1) {C};
+            \node[inner sep=1pt,fill=yellow,text=red,draw=red,font=\tiny] at (4.1,3.1) {B};
+            \node[inner sep=1pt,fill=yellow,text=red,draw=red,font=\tiny] at (4.1,2.1) {A};
+            \node[inner sep=1pt,fill=yellow,text=red,draw=red,font=\tiny] at (4.1,0.5) {A};
+            }
+
+
+            \uncover<5-12>{
+\node[anchor=north west,text width=12cm] at (5,7) {
+    \begin{itemize}
+        \item System Time --- the position in the news stream.
+                    \vspace{5pt}
+            \begin{itemize}
+                \item The summarization system  can extract any sentence from the stream earlier than the system time.
+                    \vspace{5pt}
+                \item System time can be incremented in arbitrary positive amounts.
+%                
+            \end{itemize}
+    \end{itemize}
+};
+}
+
+\uncover<6>{
+
+    \draw[opacity=0.75,fill=white,draw=white]  ($(c.south east)+(2.75,0.1)$) rectangle ($(c.south east)+(-0.3,-4.9)$);
+    \node (T1) at ($(c.south east)+(3,0)$) {$\quad\tau_i$};
+    \draw[-,line width=0.5mm] ($(c.south east)+(2.75,0.1)$) -- ($(c.south east)+(-0.2,0.1)$);
+
+
+}
+\uncover<7>{
+
+    \draw[opacity=0.75,fill=white,draw=white]  ($(c.south east)+(2.75,-0.25)$) rectangle ($(c.south east)+(-0.3,-4.9)$);
+    \node (T1) at ($(c.south east)+(3,-0.25)$) {$\quad\tau_{i+1}$};
+    \draw[-,line width=0.5mm] ($(c.south east)+(2.75,-0.25)$) -- ($(c.south east)+(-0.2,-0.25)$);
+}
+
+\uncover<8>{
+
+    \draw[opacity=0.75,fill=white,draw=white]  ($(c.south east)+(2.75,-0.75)$) rectangle ($(c.south east)+(-0.3,-4.9)$);
+    \node (T1) at ($(c.south east)+(3,-0.75)$) {$\quad\tau_{i+2}$};
+    \draw[-,line width=0.5mm] ($(c.south east)+(2.75,-0.75)$) -- ($(c.south east)+(-0.2,-0.75)$);
+
+
+}
+\uncover<9>{
+
+    \draw[opacity=0.75,fill=white,draw=white]  ($(c.south east)+(2.75,-1.0)$) rectangle ($(c.south east)+(-0.3,-4.9)$);
+    \node (T1) at ($(c.south east)+(3,-1.0)$) {$\quad\tau_{i+3}$};
+    \draw[-,line width=0.5mm] ($(c.south east)+(2.75,-1.0)$) -- ($(c.south east)+(-0.2,-1.0)$);
+}
+
+\uncover<10>{
+    \draw[opacity=0.75,fill=white,draw=white]  ($(c.south east)+(2.75,-2.25)$) rectangle ($(c.south east)+(-0.3,-4.9)$);
+    \node (T1) at ($(c.south east)+(3,-2.25)$) {$\quad\tau_{i+4}$};
+    \draw[-,line width=0.5mm] ($(c.south east)+(2.75,-2.25)$) -- ($(c.south east)+(-0.2,-2.25)$);
+}
+
+\uncover<11>{
+    \draw[opacity=0.75,fill=white,draw=white]  ($(c.south east)+(2.75,-3.25)$) rectangle ($(c.south east)+(-0.3,-4.9)$);
+    \node (T1) at ($(c.south east)+(3,-3.25)$) {$\quad\tau_{i+5}$};
+    \draw[-,line width=0.5mm] ($(c.south east)+(2.75,-3.25)$) -- ($(c.south east)+(-0.2,-3.25)$);
+}
+\uncover<12>{
+    \draw[opacity=0.75,fill=white,draw=white]  ($(c.south east)+(2.75,-4.25)$) rectangle ($(c.south east)+(-0.3,-4.9)$);
+    \node (T1) at ($(c.south east)+(3,-4.25)$) {$\quad\tau_{i+6}$};
+    \draw[-,line width=0.5mm] ($(c.south east)+(2.75,-4.25)$) -- ($(c.south east)+(-0.2,-4.25)$);
+}
+
+    \end{tikzpicture}}
+\end{frame}
+
+
