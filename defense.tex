@@ -1,0 +1,161 @@
+\documentclass[usenames,dvipsnames,aspectratio=169]{beamer}
+%\usepackage{pgfplots}
+%\let\textmdorig\textmd
+%\let\textscorig\textsc
+%\let\textttorig\texttt
+%\usepackage{tikz}
+%\usetikzlibrary{shapes}
+%\usetikzlibrary{arrows}
+%\usetikzlibrary{positioning}
+%
+%
+%\renewcommand<>{\textsc}[1]{%
+%      \only#2{\textscorig{#1}}%
+%  }
+\mode<presentation> {
+    \usetheme{metropolis}
+}
+\usefonttheme[onlymath]{serif}
+\setbeamertemplate{navigation symbols}{}
+
+\usepackage{lmodern}
+\usepackage{booktabs} 
+\usepackage{multirow}
+
+\DeclareMathOperator*{\argmin}{arg\,min}
+
+%%%  \usepackage[T1]{fontenc}
+%%%  \usepackage{stmaryrd}
+%%%  \usepackage{tikz-3dplot}
+\usetikzlibrary{calc}
+%%%  \usepackage{dsfont}
+%%%  
+%%%  \newcommand\T{{\mathpalette\raiseT\intercal}}
+%%%  \newcommand\raiseT[2]{\raisebox{0.45ex}{$#1#2$}}
+%%%  
+%%%  \newcommand{\tikzmark}[1]{\tikz[overlay,remember picture] \node (#1) {};}
+%%%  
+%%%  \usepackage[normalem]{ulem}
+%%%  \usepackage{algpseudocode}
+%%%  \usepackage{algorithm}
+%%%  %\usepackage{algorithmic}
+%%%  \usepackage{graphicx} % Allows including images
+%%%  
+%%%  \usepackage{xcolor}
+%%%  \usepackage{colortbl}
+%%%  \usepackage{xspace}
+%%%  \usepackage{bbm}
+%%%  \usepackage{amsfonts}
+%%%  \usepackage{amsmath}
+%%%  \usepackage{amssymb}
+%%%  \usepackage{ulem}
+%%%  \usepackage[backend=biber]{biblatex}
+%%%  \bibliography{cites.bib}
+%%%  
+%%%  \newcolumntype{g}{>{\columncolor{black!5}}c}
+%%%  \newcolumntype{f}{>{\columncolor{black!5}}r}
+%%%  \newcolumntype{L}[1]{>{\columncolor{black!5}}m{#1}}
+%%%  \usepackage{tikz}
+%%%  \usetikzlibrary{shapes}
+%%%  \usetikzlibrary{arrows}
+%%%  \usetikzlibrary{positioning}
+%%%  \usepackage[most]{tcolorbox}
+%%%  
+%%%  
+%%%  \newenvironment{indentquote}{%
+%%%        \par%
+%%%          \medskip
+%%%            \leftskip=4em\rightskip=2em%
+%%%              \noindent\ignorespaces}{%
+%%%                    \par\medskip}
+%%%  
+%%%  \newenvironment{indentquote2}{%
+%%%        \par%
+%%%          \medskip
+%%%            \leftskip=2em\rightskip=2em%
+%%%              \noindent\ignorespaces}{%
+%%%                    \par\medskip}
+%%%  
+%%%  
+%%%  
+%%%  
+%%%  \tikzset{weird fill/.style={append after command={
+%%%     \pgfextra
+%%%          \draw[sharp corners, fill=#1]% 
+%%%      (\tikzlastnode.west)%  
+%%%      [rounded corners=3pt] |- (\tikzlastnode.north)% 
+%%%      [rounded corners=1pt] -| (\tikzlastnode.east)% 
+%%%      [rounded corners=1pt] |- (\tikzlastnode.south)% 
+%%%      [rounded corners=3pt] -| (\tikzlastnode.west); 
+%%%     \endpgfextra}}}
+                  \title[Sal. Est. and Faithful Gen.]{Salience Estimation and Faithful Generation}
+                  \subtitle{Modeling Methods for Text Summarization and Generation}
+
+\author[Chris Kedzie]{Chris Kedzie} 
+\institute[Columbia U.]
+{
+Columbia University\\
+Department of Computer Science\\
+\medskip
+\textit{kedzie@cs.columbia.edu}
+}
+\date{\today} % Date, can be changed to a custom date
+
+%\newcommand\tocforsect[2]{%
+%      \begingroup
+%        \edef\safesection{\thesection}
+%          \setcounter{section}{#1}
+%            \tableofcontents[#2,currentsection]
+%              \setcounter{section}{\safesection}
+%                \endgroup
+%            }
+
+\begin{document}
+
+\begin{frame}
+\titlepage 
+\end{frame}
+
+
+\input{sections/1_intro.tex}
+
+\section{Salience Estimation with Deep Learning Content Selection Models}
+\input{sections/2_task.tex}
+\input{sections/2_models.tex}
+\input{sections/2_experiments.tex}
+\input{sections/2_conclusion.tex}
+
+%%% 
+%%% 
+%%% 
+%%% 
+%%% 
+%%% 
+%%% 
+%%% %\input{extsum.tex}
+%%% 
+%%% \section{Salience Estimation with Structured Content Selection Models}
+%%% 
+%%% 
+%%% \input{sections/3_task.tex}
+%%% \input{sections/3_models.tex}
+%%% \input{sections/3_experiments.tex}
+%%% 
+%%% 
+%%% 
+%%% \section{Faithful and Controllable Generation}
+%%% 
+%%% \input{sections/4_task.tex}
+%%% \input{4_method.tex}
+%%% \input{sections/5_alignment_training.tex}
+%%% \input{5_experiments.tex}
+%%% %\input{5_utterance_planners.tex}
+%%% %\input{5_phrase_data_augmentation.tex}
+%%% 
+%%% 
+%%% 
+%%% \input{sections/6_conclusion.tex}
+
+
+
+\end{document}

@@ -1,0 +1,59 @@
+\begin{frame}{Takeaways}
+
+
+    \begin{itemize}
+        \item Our main contribution in this section is a thorough evaluation of neural sentence extraction
+models for single document summarization.
+\vspace{10pt}
+        \item Our findings reveal that
+            in the presence of shallow heuristics, content/semantics of sentences
+        less important to models.
+        \begin{itemize}
+            \item Averaging encoder works better than order-aware models.
+            \item Explicitly modeling summaries/documents/output dependencies not necessary to achieve best performance.
+            \item Task-specific word embeddings little to no improvement over
+                 generic embeddings.
+            \item News models where position is exploitable show small drops in performance  under word-class ablations.
+            \item Removing position as a feature drops performance significantly on news.
+         \end{itemize}
+         \vspace{10pt}
+
+    \end{itemize}
+ \end{frame}
+
+ \begin{frame}{Takeaways}
+
+     \begin{itemize}
+
+        \item This is important to know because we should not expect neural summarization models
+            trained on large news datasets  to 
+            perform well where content is important for predicting sentence salience.
+         \vspace{10pt}
+
+     \item Our findings also suggest that abstractive summarization models will not be effective on tasks
+         that require complex reasoning about the content.
+         \vspace{10pt}
+     \item Summarization research should focus on problems other
+         than single document news summarization for estimating salience
+         since position is so strong a feature.
+
+         \vspace{10pt}
+
+     \item  To that end, we turn to stream summarization, where position
+         is a less reliable heuristic.
+
+
+ \end{itemize}
+ \end{frame}
+
+%\begin{frame}{Takeaways}
+%                \begin{itemize}
+%                    \item How to represent sentences? \alert{Averaging is effective!}
+%
+%                    \item How to model salience of sentences w.r.t. document context? \alert{Seq2seq + attention mechanism as good as task specific architectures.}
+%                    \item Simpler or More generic architecture choices as good as task specific ones. \alert{Explicitly representing documents/summaries/dependencies amongst output variables less important.}
+%\item \alert{Heuristics exploitable by the models have more of an impact than modeling choices in this task.}
+%                \end{itemize}
+%
+%
+%\end{frame}
