@@ -2,17 +2,17 @@
 
 \begin{itemize}
 
-\item Automatic Summarization is an old dream of computer scientists (Luhn, 1958; Edmundson, 1969) 
+    \item Automatic Summarization is an old dream of computer scientists (Luhn, 1958; Edmundson, 1969) as is Natural Language Generation (NLG) (Yngve, 1961)
 
 \vspace{20pt}
 
-\item Summarization researchers and Generation researchers
+\item Summarization researchers and NLG researchers
     (with some notable exceptions) have been focused on different goals.
 
 \begin{itemize}
 
   \item Summarization: focused on identifying salient information.
-  \item Generation: interested in syntactic/semantic representations for
+  \item NLG: interested in syntactic/semantic representations for
         planning and realizing natural language utterances.
 
 \end{itemize}
@@ -33,15 +33,14 @@
 \item \textbf{(End-to-End Deep Learning Paradigm)} A Seq2Seq model is trained to map input text to output text directly.
         
         \begin{center}
-    
-    \begin{tikzpicture}
+         \resizebox{0.45\textwidth}{!}{\begin{tikzpicture}
         \node[draw] (doc) at (0,0) {Document}; 
         \node[draw,dashed,align=center] (model) at (3,0) {Seq2Seq \\ Model};
         \node[draw] (sum) at (6,0) {Summary};
         \draw[->,line width=0.5mm] (doc) -- (model);
         \draw[->,line width=0.5mm] (model) -- (sum);
         %\uncover<2->{\node[] (tag) at (4,-0.75) {Whats happening in here?};}
-    \end{tikzpicture}
+\end{tikzpicture}}
     \end{center}
 
 \only<1-2>{
@@ -54,8 +53,7 @@
 \item Difficult to understand why a particular summary was generated.
 
 \begin{itemize}
-\item Models may be exploiting dataset specific artifacts or heuristics more
-    than they are ``understanding'' the text. (Kry\'sci\'nski et al., 2019)
+\item Models may be exploiting dataset specific artifacts. (Kry\'sci\'nski et al., 2019)
 
     \vspace{5pt}
 
@@ -72,13 +70,18 @@
 
 \only<3->{
 
-\item Without explicit justifications for why content was deemed important and
- how that information is to be organized into a summary it seems unlikely that end-to-end abstractive models will be able to address interesting queries like
+\item Without explicit justifications for 
+    \begin{itemize}
+        \item  why particular content is important, and
+        \item how that information is to be organized  
+   \end{itemize}
+
+      \vspace{10pt}
+   \item it seems unlikely that end-to-end abstractive models will be able to address interesting queries like:
 
 \begin{itemize}
   \item Summarize a transcript of a doctor's appointment, focusing on evidence
       for a particular diagnosis (that is medically sound).
-
   \item Summarize last week's Covid-19 news, comparing and contrasting topics
       that were highlighted by news outlets with differing political 
       ideologies.
@@ -117,7 +120,7 @@
             { $ \underbrace{\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad}_{\text{How to say it.}}$  };
 
         \node at ($(P1)+(0,-1.0)$) {Focus of Summarization Researchers};
-        \node at ($(P2)+(0,-1.0)$) {Focus of Generation Researchers};
+        \node at ($(P2)+(0,-1.0)$) {Focus of NLG Researchers};
 
 \end{tikzpicture}}
 \end{center}
@@ -131,7 +134,7 @@
     \end{itemize}
   }
   \only<3>{
-\item  How to design reliable neural natural language generation (NLG)
+\item  How to design reliable neural NLG
     models?
     \begin{itemize}
         \item We study this in an idealized setting where we have a formal
@@ -182,6 +185,7 @@
             \item single document summarization
             \item neural models
         \end{itemize}
+                \vspace{10pt}
             \item Salience Estimation with Structured Content Selection Models 
         \begin{itemize}
             \item news stream summarization
@@ -192,6 +196,7 @@
     \item[\textbf{Part II.}] \textbf{How to say it?}
         \begin{enumerate}
             \item[3.] Faithful Generation
+                \vspace{10pt}
             \item[4.] Controllable Generation
         \end{enumerate}
     \end{itemize}
