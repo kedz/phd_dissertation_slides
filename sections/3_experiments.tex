@@ -1,16 +1,16 @@
 \begin{frame}{Metrics}
 \begin{itemize}
-\item Expected Gain  --- (Nugget Precision) 
+    \item \alert<2>{Expected Gain  --- (Nugget Precision) }
  average number of novel nuggets matched to each update
 
 \vspace{10pt}
-\item Comprehensiveness --- (Nugget Recall) percent of unique nuggets matched
+\item \alert<3>{Comprehensiveness --- (Nugget Recall)} percent of unique nuggets matched
 by update summary
 \vspace{10pt}
 \item F1 --- Harmonic Mean of Expected Gain and Comprehensiveness
 
 \vspace{10pt}
-\item Latency Weighted variants of the above metrics
+\item \alert<4>{Latency Weighted} variants of the above metrics
 \begin{itemize}
 \item Value of each nugget match decreases to 0 if it is extracted after its reference time.
 \item Value of each nugget match increases to as much as 2 if it is 
@@ -142,12 +142,12 @@ BUPT\_PRIS & Cluster1 & 0.0033 & 0.4369 & \textbf{1.9175} & 0.0127\\
                 \midrule
         Full System & 0.306 \\
                 \midrule
-                No Simple  &  0.294 & \small (-.012)\\ 
-                No Query &  0.280 & \alert<1>{\small (-.026)}\\ 
-                No Geo   &  0.265 &\alert<1>{\small (-.041)}\\ 
-                No LM     &  0.254 &\alert<1,2>{\small (-.052)}\\
+                No Non-Content  &  0.294 & \small (-.012)\\ 
+                No Query Relecance &  0.280 & \alert<1>{\small (-.026)}\\ 
+                No Geographic   &  0.265 &\alert<1>{\small (-.041)}\\ 
+                No Domain LM     &  0.254 &\alert<1,2>{\small (-.052)}\\
                 \midrule
-                AP only  &  0.263 & \alert<2>{\small (-.043)} \\
+                AP-Clustering only  &  0.263 & \alert<2>{\small (-.043)} \\
                 \bottomrule
             \end{tabular}
             \end{center}
@@ -297,31 +297,31 @@ Model  & Nugget  F1 & Nugget F1 (latency) \\ % & Num. Updates \\
 \end{itemize}
 \end{frame}
 
-\begin{frame}{L2S and Position Heuristics}
-
-\begin{center}
-  \begin{tabular}{ l   c c c  }
-\toprule
-    &\multicolumn{3}{c}{latency-penalized}\\
-\cmidrule(lr){2-4}
-    & Exp. Gain    & Comp. & F1 \\
-    \midrule
-  %  \textsc{Cos}  & $0.095$ & $\mathbf{0.236}$ & $0.128$ \\
-     \textsc{L2S}  & $0.136$ & \alert{$0.306$} & $0.162$ \\
-     \textsc{L2S-FS}  & $0.164$ & \alert{$0.220$} & $0.157$ \\
-%    \textsc{L2S-Cos-FS} &
- %     $\mathbf{0.207}$ & $0.18~~$ & $\mathbf{0.163}$ \\
-\bottomrule
-  \end{tabular}
-\end{center}
-
-\begin{itemize}
-\item L2S-FS (limited to first sentences) misses out on information in the body
-\item<2> A good content model of salience is neccessary to find information in the body.
-\end{itemize}
-
-
-\end{frame}
+%\begin{frame}{L2S and Position Heuristics}
+%
+%\begin{center}
+%  \begin{tabular}{ l   c c c  }
+%\toprule
+%    &\multicolumn{3}{c}{latency-penalized}\\
+%\cmidrule(lr){2-4}
+%    & Exp. Gain    & Comp. & F1 \\
+%    \midrule
+%  %  \textsc{Cos}  & $0.095$ & $\mathbf{0.236}$ & $0.128$ \\
+%     \textsc{L2S}  & $0.136$ & \alert{$0.306$} & $0.162$ \\
+%     \textsc{L2S-FS}  & $0.164$ & \alert{$0.220$} & $0.157$ \\
+%%    \textsc{L2S-Cos-FS} &
+% %     $\mathbf{0.207}$ & $0.18~~$ & $\mathbf{0.163}$ \\
+%\bottomrule
+%  \end{tabular}
+%\end{center}
+%
+%\begin{itemize}
+%\item L2S-FS (limited to first sentences) misses out on information in the body
+%\item<2> A good content model of salience is neccessary to find information in the body.
+%\end{itemize}
+%
+%
+%\end{frame}
 
 \begin{frame}{Takeaways}
 

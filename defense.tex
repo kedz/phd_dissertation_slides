@@ -1,7 +1,7 @@
 \documentclass[usenames,dvipsnames,aspectratio=169]{beamer}
-%\usepackage{pgfplots}
+\usepackage{pgfplots}
 %\let\textmdorig\textmd
-%\let\textscorig\textsc
+\let\textscorig\textsc
 %\let\textttorig\texttt
 %\usepackage{tikz}
 %\usetikzlibrary{shapes}
@@ -24,10 +24,11 @@
 \usepackage{colortbl}
 
 \DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\argmax}{arg\,max}
 
 %%%  \usepackage[T1]{fontenc}
 %%%  \usepackage{stmaryrd}
-%%%  \usepackage{tikz-3dplot}
+  \usepackage{tikz-3dplot}
 \usetikzlibrary{calc}
 
 \tikzset{weird fill/.style={append after command={
@@ -48,18 +49,20 @@
 %%%  \newcommand{\tikzmark}[1]{\tikz[overlay,remember picture] \node (#1) {};}
 %%%  
 %%%  \usepackage[normalem]{ulem}
-%%%  \usepackage{algpseudocode}
-%%%  \usepackage{algorithm}
-%%%  %\usepackage{algorithmic}
+%\usepackage{algpseudocode}
+\usepackage{algorithm,algorithmic}
+
+%\usepackage{algorithm}
+%\usepackage{algorithmic}
 %%%  \usepackage{graphicx} % Allows including images
 %%%  
-%%%  \usepackage{xcolor}
+\usepackage{xcolor}
+\usepackage{ulem}
 %%%  \usepackage{xspace}
 %%%  \usepackage{bbm}
 %%%  \usepackage{amsfonts}
 %%%  \usepackage{amsmath}
 %%%  \usepackage{amssymb}
-%%%  \usepackage{ulem}
 %%%  \usepackage[backend=biber]{biblatex}
 %%%  \bibliography{cites.bib}
 %%%  
@@ -67,10 +70,11 @@
 %%%  \newcolumntype{f}{>{\columncolor{black!5}}r}
 %%%  \newcolumntype{L}[1]{>{\columncolor{black!5}}m{#1}}
 %%%  \usepackage{tikz}
-%%%  \usetikzlibrary{shapes}
-%%%  \usetikzlibrary{arrows}
-%%%  \usetikzlibrary{positioning}
-%%%  \usepackage[most]{tcolorbox}
+\usetikzlibrary{patterns}
+  \usetikzlibrary{shapes}
+  \usetikzlibrary{arrows}
+  \usetikzlibrary{positioning}
+%  \usepackage[most]{tcolorbox}
 %%%  
 %%%  
 %%%  \newenvironment{indentquote}{%
@@ -134,22 +138,14 @@ Department of Computer Science\\
 \input{sections/3_models.tex}
 \input{sections/3_experiments.tex}
 
+ 
+\section{Faithful Generation}
+ 
+\input{sections/4_task.tex}
+\input{sections/4_method.tex}
+\input{sections/5_alignment_training.tex}
 
-
-%%% 
-%%% 
-%%% \section{Faithful and Controllable Generation}
-%%% 
-%%% \input{sections/4_task.tex}
-%%% \input{4_method.tex}
-%%% \input{sections/5_alignment_training.tex}
-%%% \input{5_experiments.tex}
-%%% %\input{5_utterance_planners.tex}
-%%% %\input{5_phrase_data_augmentation.tex}
-%%% 
-%%% 
-%%% 
-%%% \input{sections/6_conclusion.tex}
+\input{sections/6_conclusion.tex}
 
 
 

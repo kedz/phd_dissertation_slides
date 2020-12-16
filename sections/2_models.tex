@@ -67,8 +67,23 @@
 \end{frame}
 
 
-\begin{frame}{Sentence Encoders/Extractors}
+\begin{frame}{Sentence Encoders}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \begin{center}
+    \resizebox{0.5\textwidth}{!}{
+    \begin{tikzpicture}[
+            emb/.style={draw,font=\small,outer sep=2pt},
+        ]
+    \node (emb1) at (0,2.2) {$\left[\mathbf{w}_1,\ldots,\mathbf{w}_{l_i}\right]$};
+    \node[emb] (encl1) at (0,3.3)  {Sent. Encoder Layer};
+    \draw[->] (emb1.north) -- (encl1.south);
+    \node (enc1) at (0,4.3) {$\mathbf{h}_i$};
+    \draw[->] (encl1.north) -- (enc1.south);
+\end{tikzpicture}}
+            \end{center}
 
+\end{column}\begin{column}{0.5\textwidth}
     \begin{itemize}
         \item We compare 3 different Sentence Encoder Layers:
             \begin{itemize}
@@ -77,27 +92,32 @@
                 \item RNN Encoder
                 \end{itemize}
             \vspace{5pt}
+    \end{itemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Sentence Extractors}
+  \begin{itemize}
         \item We compare two prior Sentence Extractor Layers,
                 SummaRunner Extractor {\tiny (Nallapati et al., 2016)}
                 and  Cheng \& Lapata Extractor {\tiny(Cheng and Lapata, 2016)}
                 \begin{itemize}
-                    \item (SummaRunner only) Internal vector represenatations of summary and document constructed from sentence embeddings.
+                    \item (SummaRunner only) Internal vector representations of summary and document constructed from sentence embeddings.
                     \item Models dependencies between earlier predictions
                         and subsequent predictions.
                 \end{itemize}
-            \vspace{5pt}
-       \item We propose a variant of each Sentence Extractor with less task 
+            \vspace{10pt}
+       \item<2> We propose a variant of each Sentence Extractor with less task 
            specific architecture using common neural network components.
             \begin{itemize}
                 \item RNN Extractor -- biRNN tagger
                 \item Seq2Seq Extractor -- seq2seq with attention
                 \begin{itemize}
-                    \item No internal represenatations of summary/document.
+                    \item No internal representations of summary/document.
                     \item Dependencies between predictions not modeled.
             \end{itemize}
             \end{itemize}
     \end{itemize}
 
 \end{frame}
-
-

@@ -1,0 +1,861 @@
+\subsection{Experiments}
+
+
+\begin{frame}{Baseline Linearization Strategies $\pi$}
+
+    \textbf{Random (\textsc{Rnd})}
+    \begin{itemize}
+        \item Attribute-values are randomly ordered.
+    \end{itemize}~\\
+\end{frame}
+\begin{frame}{Baseline Linearization Strategies $\pi$}
+    \textbf{Increasing Frequency (\textsc{IncFreq})}
+    \begin{itemize}
+        \item Attribute-values are ordered in increasing frequency of 
+            their occurrence in the training data.\[\operatorname{count}(x_i) \le \operatorname{count}(x_{i+1})\]
+    \end{itemize}~\\
+
+\end{frame}
+
+\begin{frame}{Baseline Linearization Strategies $\pi$}
+\begin{itemize}\item Random and Increasing Frequency linearization strategies 
+            \alert{\textbf{DO NOT}} lead to controllable generation!\\~\\~\\
+        
+        \item Utterance realization order is determined implicitly by decoder language model.
+    \end{itemize}
+\end{frame}
+
+%\begin{frame}{Evaluation Measures}
+%    \textbf{Automatic Quality Measures}
+%    \begin{itemize}
+%        \item \textsc{Bleu} 
+%        \item see paper for \textsc{Rouge} and others
+%     \end{itemize}
+%\end{frame}
+%
+%\begin{frame}{Evaluation Measures}
+%    \textbf{Semantic Measures}
+%    \begin{itemize}
+%        \item \textsc{Semantic Error Rate (SER)} \[\textsc{SER} \triangleq \frac{\textrm{\#missing} + \textrm{\#wrong} + \textrm{\#added}   }{\textrm{\#attributes}}\]
+%            Attribute-values automatically tagged + manual correction.\\~\\~\\
+%    \end{itemize}
+%\end{frame}
+%\begin{frame}{Evaluation Measures}
+%
+%    \textbf{Control Measures}
+%    \begin{itemize}
+%        \item Order Accuracy (OA) \[\textsc{OA} \triangleq \frac{\sum_{\mathbf{x} \in \mathcal{D}}\mathds{1}\left\{\textrm{generated utterance }\boldsymbol{\hat{\mathbf{y}}} \textrm{ follows plan } \mathbf{x}  \right\}  }{\vert\mathcal{D}\vert }\]
+%    \end{itemize}
+%\end{frame}
+%
+%
+%
+%\begin{frame}
+%\Huge 
+%\textbf{And now some results...}
+%
+%\end{frame}
+
+\usetikzlibrary{patterns}
+\pgfplotstableread[row sep=\\,col sep=&]{
+    interval        & Rnd   & If    & BgUP & NUP \\
+    biGRU           & 2.64 & 12.64 & 0.26 & 0.26  \\
+    Trans.     & 1.06  & 0.66  & 0.1 & 0.1 \\
+    BART            & 0.1  & 0.18  & 0.20 & 0.20\\
+    }\EtoEdata
+
+\pgfplotstableread[row sep=\\,col sep=&]{
+    interval        & Rnd   & If    & BgUP & NUP \\
+    biGRU           & 12.56 & 19.20 & 3.40 & 1.58  \\
+    Trans.     & 9.62  & 7.50  & 4.68 & 2.70 \\
+    BART            & 1.50  & 1.86  & 0.52 & 0.54\\
+    }\mydata
+
+
+    \begin{frame}{Linearization Strategy Comparison}
+        \begin{center}
+\begin{tikzpicture}
+    \begin{axis}[
+            ybar,
+            bar width=.15cm,
+            width=0.5\textwidth,
+            height=.35\textwidth,
+         %   legend style={at={(1,1)},
+         %       anchor=north east,legend columns=1},
+            symbolic x coords={biGRU,Trans.,BART},
+            ymajorgrids={true},
+            xtick=data,
+            %nodes near coords,
+            nodes near coords align={vertical},
+            enlarge x limits=0.25,
+            ymin=0,ymax=15,
+            ylabel={Semantic Error Rate \%},
+            title={E2E Challenge},
+        ]
+        \addplot[fill=Red,color=Red!40,postaction={pattern=dots}] table[x=interval,y=If]{\EtoEdata};
+        \addplot[fill=Blue!20,draw=Blue] table[x=interval,y=Rnd]{\EtoEdata};
+%        \addplot[fill=Green!5,draw=Green,postaction={
+%        pattern=north west lines,pattern color=Green
+%    }] table[x=interval,y=BgUP]{\EtoEdata};
+        \addplot[fill=Green!20,draw=Green,postaction={
+        pattern=north east lines,pattern color=Green
+    }] table[x=interval,y=NUP]{\EtoEdata};
+     %   \legend{IncFreq, Rnd, AlignTrain+NUP}
+    \only<2->{
+
+        \node[xshift=6] (a1) at (axis cs:biGRU,5) {};
+        \node[xshift=6] (a2) at (axis cs:biGRU,0.5) {};
+        \draw[green,line width=0.6mm,->] (a1.center) -- (a2.center);
+
+        \node[xshift=6] (b1) at (axis cs:Trans.,5) {};
+        \node[xshift=6] (b2) at (axis cs:Trans.,0.5) {};
+        \draw[green,line width=0.6mm,->] (b1.center) -- (b2.center);
+
+        \node[xshift=6] (c1) at (axis cs:BART,5) {};
+        \node[xshift=6] (c2) at (axis cs:BART,0.5) {};
+        \draw[green,line width=0.6mm,->] (c1.center) -- (c2.center);
+    }
+
+    \end{axis}
+
+    \begin{axis}[
+            ybar,
+            xshift=6.5cm,
+            bar width=.15cm,
+            width=0.5\textwidth,
+            height=.35\textwidth,
+            ymajorgrids={true},
+            legend style={at={(1,1)}, nodes={scale=0.6, transform shape},
+                anchor=north east,legend columns=-1},
+            symbolic x coords={biGRU,Trans.,BART},
+            xtick=data,
+            %nodes near coords,
+            nodes near coords align={vertical},
+            ymin=0,ymax=20,
+            enlarge x limits=0.25,
+            %ylabel={Semantic Error Rate \%},
+            title={ViGGO},
+        ]
+        \addplot[fill=Red,color=Red!40,postaction={pattern=dots}] table[x=interval,y=If]{\mydata};
+        \addplot[fill=Blue!20,draw=Blue] table[x=interval,y=Rnd]{\mydata};
+%        \addplot[fill=Green!5,draw=Green,postaction={
+%        pattern=north west lines,pattern color=Green
+%    }] table[x=interval,y=BgUP]{\mydata};
+        \addplot[fill=Green!20,draw=Green,postaction={
+        pattern=north east lines,pattern color=Green
+    }] table[x=interval,y=NUP]{\mydata};
+        \legend{IncFreq,Rnd,AlignTrain+NUP}
+        \only<2->{
+        \node[xshift=6] (a1) at (axis cs:biGRU,10) {};
+        \node[xshift=6] (a2) at (axis cs:biGRU,2) {};
+        \draw[green,line width=0.6mm,->] (a1.center) -- (a2.center);
+
+        \node[xshift=6] (b1) at (axis cs:Trans.,10) {};
+        \node[xshift=6] (b2) at (axis cs:Trans.,4) {};
+        \draw[green,line width=0.6mm,->] (b1.center) -- (b2.center);
+
+        \node[xshift=6] (c1) at (axis cs:BART,10) {};
+        \node[xshift=6] (c2) at (axis cs:BART,2) {};
+        \draw[green,line width=0.6mm,->] (c1.center) -- (c2.center);
+    }
+    \end{axis}
+    \node[anchor=north west,align=left,text width=14cm] at (-2,-1) { 
+        \small
+        \begin{itemize} 
+\item<2-> \textbf{Alignment Training reduces semantic error} compared to
+other linearization strategies.
+\item<3> Approaching \textbf{0 semantic errors} in large data (E2E Chal.) setting.
+        \end{itemize}};
+
+\end{tikzpicture}
+\end{center}
+
+\end{frame}
+
+\pgfplotstableread[row sep=\\,col sep=&]{
+    interval        & Rnd   & If    & BgUP & NUP \\
+    biGRU           & 66.8 & 59.2 &66.4 & 66.3  \\
+    Trans.     & 67.4  & 67.1 & 66.8 & 67.0 \\
+    BART            & 66.5  & 65.6  & 66.2 & 66.6\\
+    }\EtoEBleu
+
+\pgfplotstableread[row sep=\\,col sep=&]{
+    interval        & Rnd   & If    & BgUP & NUP \\
+    biGRU           & 50.2 & 50.2 & 48.5 & 51.8  \\
+    Trans.     & 52.0  & 52.3  & 48.7 & 51.6 \\
+    BART            & 43.7  & 43.1  & 43.8 & 45.5\\
+    }\ViggoBleu
+
+
+    \begin{frame}{Linearization Strategy Comparison}
+        \begin{center}
+\begin{tikzpicture}
+    \begin{axis}[
+            ybar,
+            bar width=.15cm,
+            width=0.5\textwidth,
+            height=.35\textwidth,
+         %   legend style={at={(1,1)},
+         %       anchor=north east,legend columns=1},
+            symbolic x coords={biGRU,Trans.,BART},
+            ymajorgrids={true},
+            xtick=data,
+            %nodes near coords,
+            nodes near coords align={vertical},
+            enlarge x limits=0.25,
+            ymin=55,ymax=70,
+            ylabel={BLEU},
+            title={E2E Challenge},
+        ]
+        \addplot[fill=Red,color=Red!40,postaction={pattern=dots}] table[x=interval,y=If]{\EtoEBleu};
+        \addplot[fill=Blue!20,draw=Blue] table[x=interval,y=Rnd]{\EtoEBleu};
+%        \addplot[fill=Green!5,draw=Green,postaction={
+%        pattern=north west lines,pattern color=Green
+%    }] table[x=interval,y=BgUP]{\EtoEdata};
+        \addplot[fill=Green!20,draw=Green,postaction={
+        pattern=north east lines,pattern color=Green
+    }] table[x=interval,y=NUP]{\EtoEBleu};
+     %   \legend{IncFreq, Rnd, AlignTrain+NUP}
+%    \only<2->{
+%
+%        \node[xshift=6] (a1) at (axis cs:biGRU,5) {};
+%        \node[xshift=6] (a2) at (axis cs:biGRU,0.5) {};
+%        \draw[green,line width=0.6mm,->] (a1.center) -- (a2.center);
+%
+%        \node[xshift=6] (b1) at (axis cs:Trans.,5) {};
+%        \node[xshift=6] (b2) at (axis cs:Trans.,0.5) {};
+%        \draw[green,line width=0.6mm,->] (b1.center) -- (b2.center);
+%
+%        \node[xshift=6] (c1) at (axis cs:BART,5) {};
+%        \node[xshift=6] (c2) at (axis cs:BART,0.5) {};
+%        \draw[green,line width=0.6mm,->] (c1.center) -- (c2.center);
+%    }
+
+    \end{axis}
+
+    \begin{axis}[
+            ybar,
+            xshift=6.5cm,
+            bar width=.15cm,
+            width=0.5\textwidth,
+            height=.35\textwidth,
+            ymajorgrids={true},
+            legend style={at={(0,1)}, nodes={scale=0.6, transform shape},
+                anchor=north west,legend columns=-1},
+            symbolic x coords={biGRU,Trans.,BART},
+            xtick=data,
+            %nodes near coords,
+            nodes near coords align={vertical},
+            ymin=40,ymax=55,
+            enlarge x limits=0.25,
+            %ylabel={Semantic Error Rate \%},
+            title={ViGGO},
+        ]
+        \addplot[fill=Red,color=Red!40,postaction={pattern=dots}] table[x=interval,y=If]{\ViggoBleu};
+        \addplot[fill=Blue!20,draw=Blue] table[x=interval,y=Rnd]{\ViggoBleu};
+%        \addplot[fill=Green!5,draw=Green,postaction={
+%        pattern=north west lines,pattern color=Green
+%    }] table[x=interval,y=BgUP]{\mydata};
+        \addplot[fill=Green!20,draw=Green,postaction={
+        pattern=north east lines,pattern color=Green
+    }] table[x=interval,y=NUP]{\ViggoBleu};
+        \legend{IncFreq,Rnd,AlignTrain+NUP}
+        \only<2->{
+%        \node[xshift=6] (a1) at (axis cs:biGRU,10) {};
+%        \node[xshift=6] (a2) at (axis cs:biGRU,2) {};
+%        \draw[green,line width=0.6mm,->] (a1.center) -- (a2.center);
+%
+%        \node[xshift=6] (b1) at (axis cs:Trans.,10) {};
+%        \node[xshift=6] (b2) at (axis cs:Trans.,4) {};
+%        \draw[green,line width=0.6mm,->] (b1.center) -- (b2.center);
+%
+%        \node[xshift=6] (c1) at (axis cs:BART,10) {};
+%        \node[xshift=6] (c2) at (axis cs:BART,2) {};
+%        \draw[green,line width=0.6mm,->] (c1.center) -- (c2.center);
+    }
+
+    \end{axis}
+    \node[anchor=north west,align=left,text width=14cm] at (-2,-1) { 
+        \small
+        \begin{itemize} 
+            \item<2-> BART in small data setting (ViGGO) has lower \textsc{Bleu} 
+    than trained from scratch models.
+\item<3> But BART has lower Semantic Error! Be careful making judgements from \textsc{Bleu} alone!
+
+        \end{itemize}};
+    \uncover<2->{
+            \node[draw=Violet,minimum height=2.3cm,minimum width=1.4cm,line width=0.5mm] at (11.0,0.3){};
+        }
+\end{tikzpicture}
+\end{center}
+\end{frame}
+
+
+
+
+\pgfplotstableread[row sep=\\,col sep=&]{
+    interval        & BgUP & NUP & Oracle \\
+    biGRU           & 98.2 & 98.3 & 94.3  \\
+    Trans.     & 99.9  & 100.0  & 95.0 \\
+    BART            & 98.6 & 98.6 & 95.3 \\
+    }\EtoEOA
+
+\pgfplotstableread[row sep=\\,col sep=&]{
+    interval        & BgUP   & NUP    & Oracle \\
+    biGRU           & 89.8 & 93.7 &  92.2 \\
+    Trans.     & 79.1 & 88.3 & 83.0  \\
+    BART            & 98.3 & 98.2 & 97.2 \\
+    }\ViggoOA
+
+
+\begin{frame}{Control of Alignment Training + UtterancePlanner (UP)}
+    \begin{center}
+       % \resizebox{0.6\textwidth}{!}{
+\begin{tikzpicture}
+    \begin{axis}[
+            ybar,
+            bar width=.15cm,
+            width=0.5\textwidth,
+            height=.35\textwidth,
+            symbolic x coords={biGRU,Trans.,BART},
+            ymajorgrids={true},
+            xtick=data,
+            %nodes near coords,
+            nodes near coords align={vertical},
+            enlarge x limits=0.25,
+            ymin=78,ymax=100,
+            ylabel={Order Acc. (\%)},
+            title={E2E},
+        ]
+        \addplot[fill=Red,color=Red!40,postaction={pattern=dots}] table[x=interval,y=BgUP]{\EtoEOA};
+        \addplot[fill=Blue!20,draw=Blue] table[x=interval,y=NUP]{\EtoEOA};
+%        \addplot[fill=Green!5,draw=Green,postaction={
+%        pattern=north west lines,pattern color=Green
+%    }] table[x=interval,y=BgUP]{\EtoEdata};
+        \addplot[fill=Green!20,draw=Green,postaction={
+        pattern=north east lines,pattern color=Green
+    }] table[x=interval,y=Oracle]{\EtoEOA};
+    \end{axis}
+
+    \begin{axis}[
+            ybar,
+            xshift=6.5cm,
+            bar width=.15cm,
+            width=0.5\textwidth,
+            height=.35\textwidth,
+            legend style={at={(0.0,1)}, nodes={scale=0.60, transform shape},
+                anchor=north west,legend columns=-1},
+            symbolic x coords={biGRU,Trans.,BART},
+            xtick=data,
+            ymajorgrids={true},
+            %nodes near coords,
+            nodes near coords align={vertical},
+            ymin=78,ymax=100,
+            enlarge x limits=0.25,
+            %ylabel={Order Acc. (\%) },
+            title={ViGGO},
+        ]
+        \addplot[fill=Red,color=Red!40,postaction={pattern=dots}] table[x=interval,y=BgUP]{\ViggoOA};
+        \addplot[fill=Blue!20,draw=Blue] table[x=interval,y=NUP]{\ViggoOA};
+%        \addplot[fill=Green!5,draw=Green,postaction={
+%        pattern=north west lines,pattern color=Green
+%    }] table[x=interval,y=BgUP]{\mydata};
+        \addplot[fill=Green!20,draw=Green,postaction={
+        pattern=north east lines,pattern color=Green
+    }] table[x=interval,y=Oracle]{\ViggoOA};
+        \legend{BigramUP,NeuralUP,Oracle}
+    \end{axis}
+
+%\uncover<2>{
+
+    \node[anchor=north west,align=left,text width=14cm] at (-2,-1) { 
+        \small
+        \begin{itemize} 
+               \item<2-> On large data (E2E), models can follow BgUP or NUP plans over 98\% of the time!  
+               \item<3-> Oracle (i.e. human) plans are harder to follow than model plans.
+        \item<4->BART maintains controllability in both high and low data settings.
+
+        \end{itemize}};
+%\node[draw,fill=white,text width=8.5cm] (a)  at (4.5,-1.5) {\textbf{Alignment Training} Yields Consistent Reductions 
+%in Semantic Error over other linearization strategies. };
+%
+%\draw[line width=0.5mm,->] (a) -- (4.80,0);
+%\draw[line width=0.5mm,->] (a) -- (8.65,0);
+%\draw[line width=0.5mm,->] (a) -- (1.0,0);
+%\draw[line width=0.5mm,->] (a) -- (1.0,-4.8);
+%\draw[line width=0.5mm,->] (a) -- (8.65,-4.9);
+%\draw[line width=0.5mm,->] (a) -- (4.80,-4.6);
+%}
+
+\end{tikzpicture}
+%}
+\end{center}
+
+%\begin{itemize}
+%    \item<2->{ On large data (E2E), NLG models can follow BgUP or NUP plans over 98\% of the time!} 
+%        \item<3->{ Oracle (i.e. human) plans are harder to follow than model plans.} 
+%        \item<4->{BART maintains controllability in both high and low data settings.} 
+%\end{itemize}
+
+\end{frame}
+
+
+
+%\begin{frame}{Alignment Training Yields Highly Controllable Model\\
+%        In Large Data Setting}
+%
+%        \begin{tabular}{cccccc}
+%            \toprule
+%            & & \multicolumn{4}{c}{E2E} \\
+%            \cmidrule(lr){3-6} 
+%          Model & Plan & \textsc{Bleu} & \textsc{Rouge} & SER (\%)$\downarrow$ & OA (\%)$\uparrow$ \\
+%            \midrule
+%    biGRU & \textsc{BgUP} & 66.4 & 68.3 & \textbf{0.26} & 98.2 \\
+%          & \textsc{NUP} & 66.3 & 68.9 & \textbf{0.26} & \textbf{98.3} \\
+%          & \textsc{Oracle} & \textbf{69.3} & \textbf{77.3} & 0.84 & 94.3 \\
+%            \midrule
+%            {\footnotesize Transformer} & \textsc{BgUP} & 66.8 & 68.4 & \textbf{0.00} & 99.9 \\
+%          & \textsc{NUP} & 67.0 & 69.0 & \textbf{0.00} & \textbf{100.0} \\
+%          & \textsc{Oracle} & \textbf{69.3} & \textbf{77.0} & 0.76 & 95.0 \\
+%%            \midrule
+%%            BART & \textsc{BgUP} & 66.2 & 68.7 & \textbf{0.20} & \textbf{98.6} \\
+%%             & \textsc{NUP} & 66.6 & 69.2 & \textbf{0.20} & \textbf{98.6} \\
+%%          & \textsc{Oracle} & \textbf{68.3} & \textbf{77.1} & 0.70 & 95.3 \\
+%            \bottomrule
+%        \end{tabular}
+%        \begin{itemize}
+%     %       \item Little difference between \textsc{BgUP} and NUP on SER and OA.
+%            \item Model plans are easier to follow than \textsc{Oracle} (i.e. human).
+%        \end{itemize}
+%\end{frame}
+%
+%\begin{frame}{Alignment Training Yields (Slightly Less) Control\\
+%        In Small Data Setting}
+%
+%        \begin{tabular}{cccccc}
+%            \toprule
+%            & & \multicolumn{4}{c}{ViGGO} \\
+%            \cmidrule(lr){3-6} 
+%          Model & Plan & \textsc{Bleu} & \textsc{Rouge} & SER (\%)$\downarrow$ & OA (\%)$\uparrow$ \\
+%            \midrule
+%    biGRU & \textsc{BgUP} & 48.5 & 58.5 & 3.40 & 89.8 \\
+%          & \textsc{NUP} & 51.8 & 62.6 & \textbf{1.58} & \textbf{93.7} \\
+%          & \textsc{Oracle} & \textbf{54.1} & \textbf{65.5} & 2.42 & 92.2 \\
+%            \midrule
+%            BART & \textsc{BgUP} & 43.8 & 54.0 & \textbf{0.52} & \textbf{98.3} \\
+%          & \textsc{NUP} & 45.5 & 57.6 & 0.54 & 98.2 \\
+%          & \textsc{Oracle} & \textbf{47.1} & \textbf{60.4} & 0.82 & 97.2 \\
+%%            \midrule
+%%            BART & \textsc{BgUP} & 66.2 & 68.7 & \textbf{0.20} & \textbf{98.6} \\
+%%             & \textsc{NUP} & 66.6 & 69.2 & \textbf{0.20} & \textbf{98.6} \\
+%%          & \textsc{Oracle} & \textbf{68.3} & \textbf{77.1} & 0.70 & 95.3 \\
+%            \bottomrule
+%        \end{tabular}
+%        \begin{itemize}
+%           % \item Higher semantic error rate and lower order accuracy than on E2E Chal.
+%            \item Trained from scratch models (biGRU) have higher \textsc{Bleu} and \textsc{Rouge} but more semantic errors than BART!
+%           % \item Model plans are easier to follow than \textsc{Oracle} (i.e. human).
+%        \end{itemize}
+%\end{frame}
+
+
+\begin{frame}{Random Permutation Stress Test}
+
+    {\Large \textbf{Following Utterance Planner Model is relatively easy.}}\\
+    \begin{itemize}
+        \item Plans are essentially coming from the training distribution.
+        \item Models have lower entropy than humans.
+    \end{itemize}~\\
+
+    {\Large \textbf{Can a model follow a random plan?}}
+        \begin{itemize}
+               \item Randomly generate plans i.e. random permutations of attribute-value sequences.
+               \item Evaluate on Order Accuracy. 
+           \end{itemize}
+        
+
+\end{frame}
+
+%\begin{frame}{Training Distribution VS Permutation Distribution}
+%    \begin{center}
+%    \begin{tabular}{llcc}
+%        \toprule
+%        & & \multicolumn{2}{c}{SER (\%)$\downarrow$} \\
+%            \cmidrule(lr){3-4} 
+%            \multicolumn{2}{c}{Model} & E2E  & ViGGO \\
+%            \midrule
+%            biGRU& NUP & \textbf{0.22} & \textbf{9.62} \\
+%                 & Rand  & 1.14          & 13.58 \\
+%            \midrule
+%            Transformer & NUP & \textbf{0.08} & \textbf{24.18} \\
+%              &Rand &     0.78   &   28.34 \\
+%            \midrule
+%            BART & NUP & 0.64 & \textbf{1.34} \\
+%                 &Rand &          \textbf{0.42} & 2.30 \\
+%    \bottomrule
+%\end{tabular}\end{center}
+%    \begin{itemize}
+%\item Random permutations \textbf{harder to follow} than NUP plan (except E2E BART!)\end{itemize}
+%\end{frame}
+%
+%\begin{frame}{\textbf{Data Augmentation} in \textbf{Large Data} Setting (E2E)}
+%    \resizebox{\textwidth}{!}{%
+%    \begin{tikzpicture}
+%        \node at (0,0) {
+%    \begin{tabular}{llcc}
+%        \toprule
+%        & & \multicolumn{2}{c}{E2E} \\
+%            \cmidrule(lr){3-4} 
+%            \multicolumn{2}{c}{Model} & SER (\%)$\downarrow$   & OA (\%)$\uparrow$ \\
+%            \midrule
+%            \multicolumn{2}{l}{biGRU} & 1.14 & 94.44 \\
+%                                      &\alert{+DataAug} & \textbf{0.54} & \textbf{97.34} \\
+%            \midrule
+%            \multicolumn{2}{l}{Transformer} & 0.78 & 95.20 \\
+%                                            &\alert{+DataAug} & \textbf{0.40} & \textbf{98.10} \\
+%            \midrule
+%            \multicolumn{2}{l}{BART} & 0.42 & 97.78 \\
+%                                     &\alert{+DataAug} & \textbf{0.22} & \textbf{98.78} \\
+%    \bottomrule
+%    \end{tabular}};
+%
+%    \node[text width=11cm,align=left,font=\Large,anchor=north] at (0,-3.15) { 
+%\begin{itemize} \item \textbf{+DataAug improves representation} ~~~~~~~~ of arbitrary permutations. \end{itemize}};
+%\end{tikzpicture}
+%}
+%\end{frame}
+%
+%\begin{frame}{\textbf{Data Augmentation} in \textbf{Small Data} Setting (ViGGO)}
+%    \resizebox{\textwidth}{!}{%
+%    \begin{tikzpicture}
+%        \node at (0,0) {
+%    \begin{tabular}{llcc}
+%        \toprule
+%        & & \multicolumn{2}{c}{ViGGO} \\
+%            \cmidrule(lr){3-4} 
+%            \multicolumn{2}{c}{Model} & SER (\%)$\downarrow$   & OA (\%)$\uparrow$ \\
+%            \midrule
+%            \multicolumn{2}{l}{biGRU} & \textbf{13.58} & 46.72 \\
+%                            &+DataAug & 14.46 & \textbf{49.26} \\
+%            \midrule
+%            \multicolumn{2}{l}{Transformer} & 28.34 & \textbf{18.70} \\
+%                                  &+DataAug & \textbf{25.72} & 18.10 \\
+%            \midrule
+%            \multicolumn{2}{l}{BART} & 2.30 & 82.00 \\
+%                                             &\alert{+DataAug} & \textbf{1.82} & \textbf{87.98} \\
+%    \bottomrule
+%    \end{tabular}};
+%
+%    \node[text width=11cm,align=left,font=\Large,anchor=north] at (0,-3.15) { 
+%        \begin{itemize}
+%            %\item  Mixed results on trained from scratch models.
+%        \item \textbf{BART+DataAug improves representation} 
+%            of arbitrary permutations.
+%    \end{itemize}
+%        };
+%\end{tikzpicture}
+%}
+%\end{frame}
+
+\pgfplotstableread[row sep=\\,col sep=&]{
+    interval        & NUP & Rand & DA \\
+    biGRU           & 98.72 & 94.44 & 97.34  \\
+    Trans.     & 99.64  & 95.20 & 98.10 \\
+    BART            & 96.52 & 97.78 & 98.78 \\
+    }\EtoEPermOA
+
+\pgfplotstableread[row sep=\\,col sep=&]{
+    interval        & NUP & Rand & DA\\
+    biGRU           & 62.04 & 46.72 &  49.26 \\
+    Trans.     & 31.34 & 18.70 & 18.10  \\
+    BART            & 91.40 & 82.00 & 87.98 \\
+    }\ViggoPermOA
+
+
+\begin{frame}{Permutation Stress Test}
+\begin{tikzpicture}
+    \begin{axis}[
+            ybar,
+            bar width=.15cm,
+            width=0.5\textwidth,
+            height=.35\textwidth,
+            symbolic x coords={biGRU,Trans.,BART},
+            ymajorgrids={true},
+            xtick=data,
+            %nodes near coords,
+            nodes near coords align={vertical},
+            enlarge x limits=0.25,
+            ymin=90,ymax=100,
+            ylabel={Order Acc. (\%)},
+            title={E2E},
+        ]
+        \addplot[fill=Red,color=Red!40,postaction={pattern=dots}] table[x=interval,y=NUP]{\EtoEPermOA};
+        \addplot[fill=Blue!20,draw=Blue] table[x=interval,y=Rand]{\EtoEPermOA};
+%        \addplot[fill=Green!5,draw=Green,postaction={
+%        pattern=north west lines,pattern color=Green
+%    }] table[x=interval,y=BgUP]{\EtoEdata};
+      \only<2->{  \addplot[fill=Green!20,draw=Green,postaction={
+        pattern=north east lines,pattern color=Green
+    }] table[x=interval,y=DA]{\EtoEPermOA};}
+
+\only<1>{
+\node[xshift=3.0] (a1) at (axis cs:biGRU,98.72) {};
+\node[xshift=3.0] (a2) at (axis cs:biGRU,94.44) {};
+\node[xshift=3.0] (b1) at (axis cs:Trans.,99.64) {};
+\node[xshift=3.0] (b2) at (axis cs:Trans.,95.20) {};
+\draw[->,draw=Red,line width=0.5mm] (a1.center) -- (a2.center); 
+\draw[->,draw=Red,line width=0.5mm] (b1.center) -- (b2.center); 
+}
+
+\only<2->{
+\node[xshift=0.0] (a1) at (axis cs:biGRU,98.72) {};
+\node[xshift=0.0] (a2) at (axis cs:biGRU,94.44) {};
+\node[xshift=0.0] (b1) at (axis cs:Trans.,99.64) {};
+\node[xshift=0.0] (b2) at (axis cs:Trans.,95.20) {};
+\draw[->,draw=Red,line width=0.5mm] (a1.center) -- (a2.center); 
+\draw[->,draw=Red,line width=0.5mm] (b1.center) -- (b2.center); 
+}
+
+
+    \end{axis}
+
+    \begin{axis}[
+            ybar,
+            xshift=6.5cm,
+            bar width=.15cm,
+            width=0.5\textwidth,
+            height=.35\textwidth,
+            legend style={at={(0.0,1)}, nodes={scale=0.6, transform shape},
+                anchor=north west,legend columns=1},
+            symbolic x coords={biGRU,Trans.,BART},
+            xtick=data,
+            ymajorgrids={true},
+            %nodes near coords,
+            nodes near coords align={vertical},
+            ymin=15,ymax=100,
+            enlarge x limits=0.25,
+            %ylabel={Order Acc. (\%) },
+            title={ViGGO},
+        ]
+        \addplot[fill=Red,color=Red!40,postaction={pattern=dots}] table[x=interval,y=NUP]{\ViggoPermOA};
+        \addplot[fill=Blue!20,draw=Blue] table[x=interval,y=Rand]{\ViggoPermOA};
+%        \addplot[fill=Green!5,draw=Green,postaction={
+%        pattern=north west lines,pattern color=Green
+%    }] table[x=interval,y=BgUP]{\mydata};
+       \only<2->{ \addplot[fill=Green!20,draw=Green,postaction={
+        pattern=north east lines,pattern color=Green
+    }] table[x=interval,y=DA]{\ViggoPermOA};}
+        \legend{NeuralUP,Random,Random+DataAug}
+
+\only<1>{
+\node[xshift=3.0] (a1) at (axis cs:biGRU,62.04) {};
+\node[xshift=3.0] (a2) at (axis cs:biGRU,46.72) {};
+\node[xshift=3.0] (b1) at (axis cs:Trans.,31.64) {};
+\node[xshift=3.0] (b2) at (axis cs:Trans.,18.70) {};
+
+\node[xshift=3.0] (c1) at (axis cs:BART,91.40) {};
+\node[xshift=3.0] (c2) at (axis cs:BART,82.00) {};
+\draw[->,draw=Red,line width=0.5mm] (a1.center) -- (a2.center); 
+\draw[->,draw=Red,line width=0.5mm] (b1.center) -- (b2.center); 
+\draw[->,draw=Red,line width=0.5mm] (c1.center) -- (c2.center); 
+}
+\only<2>{
+\node[xshift=0.0] (a1) at (axis cs:biGRU,62.04) {};
+\node[xshift=0.0] (a2) at (axis cs:biGRU,46.72) {};
+\node[xshift=0.0] (b1) at (axis cs:Trans.,31.64) {};
+\node[xshift=0.0] (b2) at (axis cs:Trans.,18.70) {};
+
+\node[xshift=0.0] (c1) at (axis cs:BART,91.40) {};
+\node[xshift=0.0] (c2) at (axis cs:BART,82.00) {};
+\draw[->,draw=Red,line width=0.5mm] (a1.center) -- (a2.center); 
+\draw[->,draw=Red,line width=0.5mm] (b1.center) -- (b2.center); 
+\draw[->,draw=Red,line width=0.5mm] (c1.center) -- (c2.center); 
+}
+
+
+    \end{axis}
+
+
+\uncover<2>{
+%\node[draw,fill=white,text width=8.5cm] (a)  at (4.5,-1.5) {\textbf{Alignment Training} Yields Consistent Reductions 
+%in Semantic Error over other linearization strategies. };
+%
+%\draw[line width=0.5mm,->] (a) -- (4.80,0);
+%\draw[line width=0.5mm,->] (a) -- (8.65,0);
+%\draw[line width=0.5mm,->] (a) -- (1.0,0);
+%\draw[line width=0.5mm,->] (a) -- (1.0,-4.8);
+%\draw[line width=0.5mm,->] (a) -- (8.65,-4.9);
+%\draw[line width=0.5mm,->] (a) -- (4.80,-4.6);
+}
+\end{tikzpicture}
+
+\begin{itemize}
+    \item Models struggle to follow random plans compared to Utterance Planner  ordering.
+\item<2-> A phrase-based data augmentation improves the ability to follow difficult plans.
+\end{itemize}
+
+
+\end{frame}
+%?
+%?\begin{frame}{Random Permutation Stress Test}
+%?    \begin{tabular}{llcccc}
+%?        \toprule
+%?        & & \multicolumn{2}{c}{E2E} & \multicolumn{2}{c}{ViGGO} \\
+%?            \cmidrule(lr){3-4} \cmidrule(lr){5-6}
+%?            \multicolumn{2}{c}{Model} & SER (\%)$\downarrow$   & OA (\%)$\uparrow$ & SER (\%)$\downarrow$   & OA (\%)$\uparrow$\\
+%?            \midrule
+%?            \multicolumn{2}{l}{biGRU} & 1.14 & 94.44 & \textbf{13.58} & 46.72 \\
+%?                                      &+DataAug & \textbf{0.54} & \textbf{97.34} & 14.46 & \textbf{49.26} \\
+%?            \midrule
+%?            \multicolumn{2}{l}{Transformer} & 0.78 & 95.20 & 28.34 & \textbf{18.70} \\
+%?                                            &+DataAug & \textbf{0.40} & \textbf{98.10} & \textbf{25.72} & 18.10 \\
+%?            \midrule
+%?            \multicolumn{2}{l}{BART} & 0.42 & 97.78 & 2.30 & 82.00 \\
+%?                                     &+DataAug & \textbf{0.22} & \textbf{98.78} & \textbf{1.82} & \textbf{87.98} \\
+%?    \bottomrule
+%?    \end{tabular}
+%?\end{frame}
+
+\begin{frame}{Controllable Generation Takeaways}
+
+
+\begin{itemize}
+\item Can you make an arbitrary Seq2Seq model controllable? \\~\\
+    \begin{itemize}
+            
+\item<2->{\alert{Yes! Alignment Training works regardless of architecture.}} \end{itemize}~\\ ~\\
+            
+
+%\item Are there differences between recurrent models or
+%    transformers? \\ \uncover<3->{\textbf{Recurrent models fair better in smaller data settings.}}
+%\item What about large pretrained models? \\ \uncover<4->{\textbf{These work great and you should use them when dataset is small.}}
+%    \end{itemize}
+%\end{itemize}
+%\end{frame}
+
+%\begin{frame}{Takeaways}
+%\begin{itemize}
+\item How robust is a controllable Seq2Seq model? \\~\\
+    \begin{itemize}
+        \item<3->{\alert{Performance drops on random  plans!}}\\~\\
+\item<4->{\alert{Can be mitigated by data augmentation!}}\\~\\
+\item<5->{\alert{BART maintains controllability in small/large data settings as well as when followng random permutation plans.}}\\
+    \end{itemize}
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Phrase-based Data Augmentation}
+    \resizebox{\textwidth}{!}{
+        \begin{tikzpicture}
+
+            \def\th{5mm};
+            \def\td{2mm};
+    \node[text height=\th,text depth=\td] (aromi) at (-5,-4) {Aromi};
+            \node[text height=\th,text depth=\td] (is) at (-1.5,-4) {is};
+            \node[text height=\th,text depth=\td] (not) at (0.0,-4) {not};
+
+            \node[text height=\th,text depth=\td] (a) at (1.5,-4) {a};
+            \node[text height=\th,text depth=\td] (ff) at (4,-4) {family-friendly};
+            \node[text height=\th,text depth=\td] (est) at (6.5,-4) {establishment};
+
+
+            \uncover<2->{
+            \node (root) at (-2.5,0) {S};
+            \node (rootNP) at (-5,-1) {NP};
+            \node (rootNPNNP) at (-5,-2) {NNP};
+            \only<1-3>{
+            \node (r1c2) at (0.0,-1) {VP};
+        }
+            \only<4->{
+                \node[color=mLightBrown] (r1c2) at (0.0,-1) {VP};
+
+            }
+            \only<1-2>{
+                \node (r2c3) at (4,-2) {NP};
+                \node (det) at (1.5,-3) {DET};
+                \node (jj) at (4,-3) {JJ};
+                \node (nn) at (6.5,-3) {NN};
+            }
+            \only<3->{
+                \node[color=mLightBrown] (r2c3) at (4,-2) {NP};
+                \node[color=mLightBrown] (det) at (1.5,-3) {DET};
+                \node[color=mLightBrown] (jj) at (4,-3) {JJ};
+                \node[color=mLightBrown] (nn) at (6.5,-3) {NN};
+            }
+            \only<1-3>{
+                \node (r2c1) at (-1.5,-2) {VB};
+                \node (r2c2) at (0.0,-2) {RB};
+                \draw[-] (r1c2) -- (r2c1);
+                \draw[-] (r1c2) -- (r2c2);
+                \draw[-] (r1c2) -- (r2c3);
+            }
+            \only<4->{
+                \node[color=mLightBrown] (r2c1) at (-1.5,-2) {VB};
+                \node[color=mLightBrown] (r2c2) at (0.0,-2) {RB};
+                \draw[mLightBrown,-] (r1c2) -- (r2c1);
+                \draw[mLightBrown,-] (r1c2) -- (r2c2);
+                \draw[mLightBrown,-] (r1c2) -- (r2c3);
+            }
+
+
+            \only<1-3>{
+                \draw[-] (r2c1) -- (is);
+            }
+            \only<4->{
+                \draw[color=mLightBrown,-] (r2c1) -- (is);
+
+            }
+            \draw[-] (rootNPNNP) -- (aromi);
+            \draw[-] (root.south west) -- (rootNP.north east);
+            \draw[-] (rootNP) -- (rootNPNNP);
+            \draw[-] (root.south east) -- (r1c2.north west);
+            \only<1-2>{
+                \draw[-] (r2c3) -- (det);
+                \draw[-] (r2c3) -- (jj);
+                \draw[-] (r2c3) -- (nn);
+                \draw[-] (det) -- (a);
+                \draw[-] (jj) -- (ff);
+                \draw[-] (nn) -- (est);
+            }
+            \only<3->{
+                \draw[mLightBrown,-] (r2c3) -- (det);
+                \draw[mLightBrown,-,color=mLightBrown] (r2c3) -- (jj);
+                \draw[mLightBrown,-,color=mLightBrown] (r2c3) -- (nn);
+                \draw[mLightBrown,-] (det) -- (a);
+                \draw[mLightBrown,-] (jj) -- (ff);
+                \draw[mLightBrown,-] (nn) -- (est);
+            }
+            \only<1-3>{
+                \draw[-] (r2c2) -- (not);
+            }
+            \only<4>{
+                \draw[color=mLightBrown,-] (r2c2) -- (not);
+            }
+        }
+        
+
+            \node[anchor=north west,align=left,inner sep=0,outer sep=0,text height=0mm,text width=11cm] at (0.7,0.5) {
+                    \begin{enumerate}
+                        \item<2-> Parse training examples.
+                \item<3-> Create additional training examples from constituent phrases.
+                \end{enumerate}};
+
+        \end{tikzpicture}
+    }
+
+    \uncover<3->{
+    \resizebox{\textwidth}{!}{
+        {  \begin{minipage}{1.45\textwidth}
+$\left[\!\!\!\left[\begin{array}{l} \textsc{Inform} \\ \textrm{family\_friendly=yes} \end{array} \right]\!\!\!\right]$ \texttt{["a", "family-friendly", "establishment"]}
+\end{minipage}}}
+}
+\uncover<4>{
+    \resizebox{\textwidth}{!}{
+        {  \begin{minipage}{1.45\textwidth}
+$\left[\!\!\!\left[\begin{array}{l} \textsc{Inform} \\  \textrm{family\_friendly=no} \end{array} \right]\!\!\!\right]$ \texttt{["is", "not", "a", "family-friendly", "establishment"]}
+\end{minipage}}}}
+
+
+\end{frame}
+

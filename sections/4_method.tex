@@ -1,0 +1,742 @@
+\subsection{Method: Noise Injection Sampling and Self-Training}
+
+
+%\begin{frame}{Why does the model fail?}
+%
+%    Idiosyncratic MRs not well modeled.\\
+%    Some attribute values never in the beam?! \uncover<2->{\textbf{Beam size=256!?}}
+%
+%\vspace{-1em}
+%
+%\begin{center}
+%\includegraphics[scale=0.8]{images/nlg/idiomr.pdf}
+%\end{center}
+%
+%\vspace{-1em}
+%\footnotesize
+%\textbf{Beam Output}
+%\begin{enumerate}
+%\item Alimentum is located in the city centre near the {\color{Red}Express by Holiday Inn}. It is not family-friendly.             
+%\item Alimentum is located in the city centre near the {\color{Red}Yippee Noodle Bar}. It is not family-friendly.
+%\item Alimentum is located in the city centre near the {\color{Red}Raja Indian Cuisine}. It is not family-friendly.
+%\item[$\vdots$] ~
+%%Alimentum is not family-friendly. It is located in the city centre near the Yippee Noodle Bar.\\\vspace{-1em}\\
+%%The Alimentum is located in the city centre near the express by holiday inn. It is not family-friendly.\\\vspace{-1em}\\
+%%Alimentum is not family-friendly. It is located in the city centre near the Raja Indian Cuisine.\\\vspace{-1em}\\
+%%Alimentum is located in the city centre near the Clare Hall. It is not family-friendly.\\\vspace{-1em}\\
+%%Alimentum is located in the city centre near the crowne plaza hotel. It is not family-friendly.\\\vspace{-1em}\\
+%%Alimentum is not family-friendly. It is located in the city centre near the express by holiday inn.\\\vspace{-1em}\\
+%%The Alimentum is located in the city centre near the Yippee Noodle Bar. It is not family-friendly.\\\vspace{-1em}\\
+%%Alimentum is not family-friendly. It is located in the city centre near the Clare Hall.\\\vspace{-1em}\\
+%%T
+%\end{enumerate}
+%\end{frame}
+%
+%%\begin{frame}{RNNs have limited systematicity.}
+%%
+%%\begin{center}
+%%\includegraphics[scale=0.8]{images/nlg/idiomr.pdf}
+%%
+%%\[ \begin{array}{l}   \end{array}  \]
+%%\end{center}
+%%
+%%\textbf{Training Example}
+%%Alimentum is \only<1>{low-priced and provides breakfast}\only<2->{\sout{low-priced and provides breakfast} family-friendly}. It is located near Yippee Noodle Bar.
+%%
+%%\begin{tikzpicture}
+%%
+%%%\node[] (X) at (7.0+0.6,1-0.5) {PP};
+%%%\node[] (Y1) at (7.0+0.6,0-0.5) {PRP};
+%%%\node[] (Y2) at (9.75+0.6,0-0.5) {NP};
+%%%\draw (X.south) -- (Y1.north) -- (Y2.north) -- (X.south);
+%%
+%%%\node[] (X) at (7.0-4.2,-5.7-0.5) {PP};
+%%%\node[] (Y1) at (7.0-4.2,-4.7-0.5) {PRP};
+%%%\node[] (Y2) at (11.0-4.2,-4.7-0.5) {NP};
+%%%\draw (X.north) -- (Y1.south) -- (Y2.south) -- (X.north);
+%%\node[text width=11cm,align=justify,anchor=north west] at (0,0) {
+%%Training set examples of Burger King:
+%%
+%%\begin{itemize}
+%%
+%%\item The Eagle is a low rated coffee shop \textbf{near Burger King} and the riverside that is family friendly and is less than \pounds20 for Japanese food.
+%%
+%%
+%%%\item There is a coffee shop called the Eagle \textbf{near Burger King} in riverside which has cheap fast food, an average customer rating but is not family-friendly.
+%%
+%%\end{itemize}
+%%%
+%%%
+%%
+%%~
+%%
+%%Training set example of Alimentum:
+%%%
+%%\begin{itemize}
+%%\item Alimentum is low-priced and provides breakfast. It is located \textbf{near Yippee Noodle Bar}.
+%%\end{itemize}
+%%};
+%%%
+%%\end{tikzpicture}
+%%%cite some lit
+%%
+%
+%%\end{frame}
+%%
+%%%\begin{frame}{RNNs have limited systematicity.}
+%%%
+%%%gen w/o system
+%%%
+%%%fodor
+%%%\end{frame}
+%%
+%%
+%\begin{frame}{Why does the model fail?}
+%
+%\centering
+%\includegraphics[width=0.65\textwidth]{{"images/nlg/near=Burger King.tronly"}.png}%\includegraphics[width=0.48\textwidth]{{"data/plots/name=Alimentum.tronly"}.png}
+%
+%%?\only<3>{
+%%?Training set PMI between ``near=Burger King'' and $X$ 
+%%?
+%%?\begin{center}
+%%?\includegraphics[width=0.75\textwidth]{{"data/plots/pwpmi"}.png}
+%%?\end{center}
+%%?}
+%
+%\end{frame}
+
+\begin{frame}{Data Augmentation: Noise-Injection Sampling and Self-Training}
+ \resizebox{0.99\textwidth}{!}{ \begin{tikzpicture}
+    
+    %%% Block A %%%
+
+    \node[text width=0.9\textwidth,align=left] (a) at (0,0) 
+    {(a) An example meaning representation/utterance pair, $(\mu, \mathbf{y})$,
+        exhibiting a 
+        spurious correlation from the training set: 
+         \colorbox{green}{high priced} restaurants tend to be \colorbox{red}{highly rated.}};
+    \node[anchor=west] (a1) at ($(a.west)+(0,2.5)$) {\small
+            $\left[\!\!\!\left[\begin{array}{l} \textsc{Inform} \\
+                        \textrm{name=Aromi} \\
+                        \textrm{customer\_rating=}\colorbox{red}{\textrm{high}} \\
+            \textrm{price\_range=}\colorbox{green}{\textrm{more than \pounds 30}} 
+\end{array} \right]\!\!\!\right]$ };
+
+     \node[draw,dotted,text width=4.5cm,anchor=east] (a2) at ($(a.east)+(0,2.5)$) 
+         {\textit{The Aromi is in the \colorbox{green}{over \pounds 30 price range}, but it's 
+         worth it as it has a \colorbox{red}{high customer rating.}}};
+ 
+
+\end{tikzpicture}}
+
+
+\end{frame}
+
+\begin{frame}{Data Augmentation: Noise-Injection Sampling and Self-Training}
+ \resizebox{0.99\textwidth}{!}{ \begin{tikzpicture}
+    
+%%     %%% Block B %%%
+%% 
+     \node[text width=0.9\textwidth,align=left] (b) at (0,-6) 
+         {(b) An NLG model trained on this data may struggle to generalize correctly at test time.  Here, the model failed to realize the \colorbox{red}{customer rating} correctly.};
+ 
+    \node[anchor=west] (b1) at ($(b.west)+(0,2.5)$) {\small
+        $\left[\!\!\!\left[\begin{array}{l} \textsc{Inform} \\
+            \textrm{name=Loch Fyne} \\
+            \textrm{customer\_rating=}\colorbox{red}{\textrm{low}} \\
+            \textrm{price\_range=}\colorbox{green}{\textrm{more than \pounds 30}} 
+            \end{array} \right]\!\!\!\right]$};
+ 
+     \node[draw,dotted,text width=4cm,anchor=east] (b2) at ($(b.east)+(0,2.5)$) 
+         {\textit{The Loch Fyne  \colorbox{green}{starts at \pounds 30} and has a 
+     \colorbox{red}{ high customer rating.}}}; 
+   \node at (2.25,-4.45) {\includegraphics[scale=0.50]{images/nlg/emoji.pdf}  };
+ 
+     \node[draw] (b3) at ($(b1.east)!0.5!(b2.west) $) {NLG Model};
+ 
+     \draw[line width=0.5mm,->] (b1.east) -- (b3.west);
+     \draw[line width=0.5mm,->] (b3.east) -- (b2.west);
+        
+     
+ 
+
+\end{tikzpicture}}
+
+
+\end{frame}
+
+%\begin{frame}{Data Augmentation: Noise-Injection Sampling and Self-Training}
+%\begin{center}
+%\[PMI( \textrm{customer\_rating=$v_i$, \textrm{price\_range=$v_j$}}) \]\includegraphics[width=0.5\textwidth]{images/nlg/heatmap_train_only.pdf}
+%\end{center}
+%\end{frame}
+
+
+\begin{frame}{Data Augmentation: Noise-Injection Sampling and Self-Training}
+ \resizebox{\textwidth}{!}{ \begin{tikzpicture}
+    
+        
+    %%% Block C %%%
+    
+    \node[text width=1.0\textwidth,align=left] (c) at (15,0) 
+        {(c) Noise-injection sampling can produce semantically divergent 
+            outputs that break correlations \textbf{but are not faithful to the input 
+        meaning representation.}};
+
+     \node[anchor=west] (c1) at ($(c.west)+(0,2.5)$) {\small
+         $\left[\!\!\!\left[\begin{array}{l} \textsc{Inform} \\ 
+             \textrm{name=Loch Fyne} \\ 
+             \textrm{customer\_rating=}\colorbox{red}{\textrm{low}} \\ 
+             \textrm{price\_range=}\colorbox{green}{\textrm{more than \pounds 30}} 
+             \end{array} \right]\!\!\!\right]$};
+ 
+     \node[draw,dotted,text width=4cm,anchor=east] (c2) at ($(c.east)+(0,2.5)$) 
+         {\textit{The Eagle has a \colorbox{red}{low customer rating} but with 
+         \colorbox{green}{prices over \pounds 30.} It serves Japanese cuisine.}};
+ 
+     \node[draw,align=center] (c3) at ($(c1.east)!0.5!(c2.west)$) 
+         {NLG Model};
+
+     \node[draw,align=center] (noise) at ($(c3)+(0,1.5)$) {Gaussian Noise}; 
+     \draw[line width=0.5mm,->] (noise) -- (c3);
+     
+     \draw[line width=0.5mm,->] (c1.east) -- (c3.west);
+     \draw[line width=0.5mm,->] (c3.east) -- (c2.west);
+  
+     %%% Block D %%%
+\uncover<2->{     
+     \node[text width=0.6\textwidth,align=left] (d) at (18,-3.5) 
+         {(d) The correct meaning representation, $\hat{\mu}$, can be recovered
+             from $\boldsymbol{\hat{\mathbf{y}}}$, with a parser model. };
+             %Adding $(\hat{\mu},\boldsymbol{\hat{\mathbf{y}}})$ 
+           % to the 
+         % dataset can help break the 
+        %  correlation between price and rating.};
+ 
+            
+     \node[anchor=west] (d1) at ($(c.west)+(0,-2.5)$) {\small
+         $\left[\!\!\!\left[\begin{array}{l} \textsc{Inform} \\ 
+             \textrm{name=The Eagle} \\ 
+             \textrm{customer\_rating=}\colorbox{red}{\textrm{low}} \\ 
+             \textrm{price\_range=}\colorbox{green}{\textrm{more than \pounds 30}}\\ 
+             \textrm{food=Japanese} \end{array} \right]\!\!\!\right]$};
+     
+     \node[anchor=north east] at ($(d1.north east)-(0.25,0.05)$) {$(\hat{\mu})$};
+     
+ 
+     \node[draw,align=center] (d3) at ($(d1.east)+(3,0)$) {MR Parser};
+ 
+     \node (z1) at ($(d3.east)+(4.9,5)$) {};
+     \node (z2) at ($(d3.east)+(4.9,0)$) {};
+ 
+     \draw[line width=0.5mm,->] (c2.east) -- (z1.center) -- (z2.center) -- (d3.east);
+     \draw[line width=0.5mm,->] (d3.west) -- (d1.east);
+ 
+     \node (h1) at ($(c1.west)+(-0.2,0)$) {};
+     \draw[line width=0.5mm,white,-] (c1.west) -- (h1.center);
+%
+%
+%
+}
+
+     \node[anchor=north east] at ($(c2.north east)+(0.10,0)$) 
+         {$(\boldsymbol{\hat{\mathbf{y}}})$};
+\end{tikzpicture}}
+
+
+\end{frame}
+
+\begin{frame}{Data Augmentation: Noise-Injection Sampling and Self-Training}
+ \resizebox{\textwidth}{!}{ \begin{tikzpicture}
+    
+        
+    %%% Block C %%%
+    
+    \node[text width=1.0\textwidth,align=left] (c) at (15,0) 
+        {(e) Adding $(\hat{\mu},\boldsymbol{\hat{\mathbf{y}}})$ 
+            to the original training dataset $\mathcal{D}$ 
+          can help break the 
+          correlation between price and rating.};
+ 
+
+
+     \node[anchor=west] (c1) at ($(c.west)+(0,2.5)$) {\small
+         $\left[\!\!\!\left[\begin{array}{l} \textsc{Inform} \\ 
+             \textrm{name=The Eagle} \\ 
+             \textrm{customer\_rating=}\colorbox{red}{\textrm{low}} \\ 
+             \textrm{price\_range=}\colorbox{green}{\textrm{more than \pounds 30}} \\
+             \textrm{food=Japanese}
+             \end{array} \right]\!\!\!\right]$};
+
+     \node[draw,dotted,text width=4cm,anchor=east] (c2) at ($(c.east)+(0,2.5)$) 
+         {\textit{The Eagle has a \colorbox{red}{low customer rating} but with 
+         \colorbox{green}{prices over \pounds 30.} It serves Japanese cuisine.}};
+ 
+
+     \node[anchor=north east] at ($(c1.north east)-(0.25,0.05)$) {$(\hat{\mu})$};
+     \node[anchor=north east] at ($(c2.north east)-(0.00,0.05)$) {$(\boldsymbol{\hat{\mathbf{y}}})$};
+\end{tikzpicture}} 
+\end{frame}
+
+\begin{frame}{Data Augmentation: Noise-Injection Sampling and Self-Training}
+\begin{enumerate}
+    \item Train a base generator $p_0$ and parser $q$ using $\mathcal{D}$.
+    \vspace{10pt}
+    \item Generate synthetic data $\mathcal{A}$ using noise-injection sampling with $p_0$ and $q$.
+    \vspace{10pt}
+    \item Train augmented generator $p_*$ on $\mathcal{D}\cup\mathcal{A}$.
+\end{enumerate}
+
+\uncover<2>{
+We find that augmented generator $p_*$ is significantly more faithful than the base generator $p_0$!
+}
+\end{frame}
+
+
+
+
+\begin{frame}[t]{Why Noise-Injection Sampling?}
+\begin{columns}[t]
+\begin{column}{0.5\textwidth}
+\setcounter{algorithm}{0}
+\begin{algorithm}[H]
+\begin{algorithmic}[1]
+%\STATE \vphantom{ $\boldsymbol{\epsilon}_{i} \sim \mathcal{N}\left(\mathbf{0}, \frac{\sigma}{i}\right)$} 
+\STATE $y_{i+1} \sim p(\cdot|\mathbf{h}_i)$
+\end{algorithmic}
+\caption{Ancestral Sampling}
+\label{alg:seq}
+\end{algorithm}
+\end{column}
+\begin{column}{0.5\textwidth}
+\begin{algorithm}[H]
+\begin{algorithmic}[1]
+\STATE \colorbox{green!20}{$\boldsymbol{\epsilon}_{i} \sim \mathcal{N}\left(\mathbf{0}, \frac{\sigma}{i}\right)$}
+\STATE $y_{i+1} \gets$ \colorbox{red!20}{$\argmax_{y\in\mathcal{Y}}$} $p(y|\mathbf{h}_i + \boldsymbol{\epsilon}_i)$
+\end{algorithmic}
+\caption{Noise-Injection Sampling}
+\label{alg:seq}
+\end{algorithm}
+
+\end{column}
+\end{columns}
+
+    \begin{itemize}
+
+        \item<2-> Randomness is moved from softmax distribution to \colorbox{green!20}{perturbation of hidden states.}
+
+            ~\\
+
+        \item<3-> Decoding works like greedy decoding, \colorbox{red!20}{selecting the most likely next word.}
+
+            ~\\
+
+        \item<4-> Reduces the risk of drawing a disfluent word.
+
+~\\
+
+
+        \item<5-> Easier to obtain a topically diverse but syntactically
+            well-formed output.
+
+    \end{itemize}
+
+
+
+\end{frame}
+
+
+
+
+
+\begin{frame}{Data Augmentation: Noise-Injection Sampling and Self-Training}
+\[PMI( \textrm{customer\_rating=$v_i$, \textrm{price\_range=$v_j$}}) \]
+\begin{center}
+\includegraphics[width=0.8\textwidth]{images/nlg/heatmap.pdf}
+\end{center}
+\end{frame}
+
+
+
+
+
+%\setcounter{algorithm}{0}
+%\begin{frame}
+%\setcounter{algorithm}{0}
+%\begin{algorithm}[H]
+%\caption{\footnotesize Self-Training Synthetic Data Collection}
+%\begin{algorithmic}[1]
+%    \footnotesize
+%\Statex
+%%\Require Training data $\mathcal{D} = \{(x_i,y_i) \}|_{i=1}^n$, \only<1>{MR Parser $q$}\only<2->{{\color{mLightBrown}MR Parser $q$}}
+%\Require Base Speaker $p$, Listener $q$
+%\Statex
+%%\State Train base generator $p_0$ using $\mathcal{D}$ 
+%\State Initialize empty dataset $\mathcal{A} \leftarrow \{\}$
+%%\Statex
+%\Repeat 
+%\State \textcolor<2,8>{mLightBrown}{Sample a novel MR:} {\color{Green}$\tilde{x} \sim \mathcal{D}$} %\textcolor<2,8>{mLightBrown}{\Comment{Sample a novel MR.}}
+%\State \textcolor<3>{mLightBrown}{Sample an utterance:} {\color{Red}$\hat{y} \sim p(\cdot|\tilde{x}, \epsilon)$} \Comment{Noise Injection Sampling}
+%\State \textcolor<4>{mLightBrown}{Predict corrected MR:} {\color{Blue}$\hat{x} \leftarrow q(\hat{y})$} %\textcolor<4>{mLightBrown}{\Comment{Predict MR from $\hat{y}$}}
+%\If{\textcolor<5>{mLightBrown}{\textbf{not} $\operatorname{filter}(\hat{x}, \hat{y})$}} 
+%\State \textcolor<6>{mLightBrown}{$\mathcal{A} \leftarrow \mathcal{A} \cup \left\{(\hat{x}, \hat{y})\right\}$ \Comment{Update synthetic data}}
+%\EndIf
+%\Until{$N$ samples are obtained} \\
+%\Return $\mathcal{A}$
+%\end{algorithmic}
+%\end{algorithm}
+%
+%\end{frame}
+%
+%\begin{frame}{Sampling an Utterance, $\hat{y} \sim p(\cdot|\tilde{x})$}
+%
+%    \begin{columns}
+%        \begin{column}{0.43\textwidth}  %%<--- here
+%
+%\setcounter{algorithm}{1}
+%    \begin{algorithm}[H]
+%    \caption{\footnotesize Ancestral Sampling}
+%    \begin{algorithmic}[1]
+%        \footnotesize
+%        \State \textcolor<2>{mLightBrown}{$\hat{y}_0 \leftarrow \textrm{``\textless START\textgreater''}$}
+%        \State \textcolor<2>{mLightBrown}{$i\leftarrow 0$}
+%        \While{$\hat{y}_{i} \ne \textrm{``\textless STOP\textgreater''}$ }
+%        \State \textcolor<3>{mLightBrown}{$\hat{y}_{i+1} \sim p(\cdot |\hat{y}_{\leq i}, \tilde{x})$}
+%        \State \textcolor<4>{mLightBrown}{$i \leftarrow i + 1$}
+%        \EndWhile \\
+%        \Return $\hat{y}_1,\ldots,\hat{y}_{i}$
+%    \end{algorithmic}
+%    \end{algorithm}
+%
+%        \vfill 
+%        \end{column}
+%
+%        \begin{column}{0.52\textwidth}
+%            \uncover<5->{
+%    \begin{algorithm}[H]
+%    \caption{\footnotesize Noise Injection Sampling}
+%    \begin{algorithmic}[1]
+%            \footnotesize
+%            \State \textcolor<6>{mLightBrown}{$\hat{y}_0 \leftarrow \textrm{``\textless START\textgreater''}$}
+%            \State \textcolor<6>{mLightBrown}{$i\leftarrow 0$}
+%        \While{$\hat{y}_{i} \ne \textrm{``\textless STOP\textgreater''}$ }
+%        \State \textcolor<7>{mLightBrown}{$\epsilon_i \sim \mathcal{N}(0, \frac{\sigma}{i+1})$}
+%        \State \textcolor<8>{mLightBrown}{$\hat{y}_{i+1} \gets \operatorname{arg\;max} {\color{Red}p(\cdot |\hat{y}_{\leq i}, \epsilon_i, \tilde{x})}$}
+%        \State \textcolor<9>{mLightBrown}{$i \leftarrow i + 1$}
+%        \EndWhile \\
+%        \Return $\hat{y}_1,\ldots,\hat{y}_{i}$
+%
+%    \end{algorithmic}
+%    \end{algorithm}
+%}
+%        \end{column}
+%
+%    \end{columns}
+%%
+%
+%
+%
+%\begin{center}
+%    \uncover<3->{
+%    
+%        \footnotesize 
+%
+%        $\begin{array}{rcl}
+%            h_i & \triangleq & i^{\textrm{th}} \textrm{ hidden state of decoder}\\
+%            p(\cdot |\hat{y}_{\leq i-1}, \tilde{x}) &=&  \operatorname{softmax}(W^Th_i + b)\\
+%            \uncover<8->{{\color{Red}p(\cdot |\hat{y}_{\leq i-1}, \epsilon_i, \tilde{x})}  &=& \operatorname{softmax}\left(W^T(h_i + \epsilon_i) + b\right) }
+%        \end{array}$
+%        }
+%
+%
+%\end{center}
+%
+%\uncover<5->{
+%    \footnotesize
+%Noisy Parallel Approximate Decoding for Conditional Recurrent Language Model
+%(Cho, 2016) \nocite{cho2016noisy}
+%}
+%
+%\end{frame}
+%
+%\subsection{Experiments}
+%\begin{frame}{Datasets}
+%    
+%    \begin{center}
+%    \begin{tabular}{lll}
+%        \toprule
+%        & E2E Gen. Chal. \\
+%        \midrule
+%        Domain & Restaurants\\
+%        Dialog Acts & 1 \\
+%        Attributes & 8 \\
+%        Value Types & categorical  \\
+%        Size & 33,5k/1.4k/0.6k \\
+%        \bottomrule
+%    \end{tabular}
+%\end{center}
+%%?    \textbf{dataset}: E2E Generation Challenge\\
+%%?    \textbf{domain:} Restaurants\\
+%%?    \textbf{dialog acts:} 1\\
+%%?    \textbf{attributes:} 8\\
+%%?    \textbf{attribute values:} categorical\\
+%%?
+%%?
+%%?    ~\\
+%%?
+%%?    \textbf{dataset}: ViGGO\\
+%%?    \textbf{domain:} Video Games\\
+%%?    \textbf{dialog acts:} 9\\
+%%?    \textbf{attributes:} 14\\
+%%?    \textbf{attribute values:} categorical, lists, free-text\\
+%%?    \textbf{size:} 5.1k/.2k/.4k
+%
+%
+%\end{frame}
+
+\begin{frame}[t]{E2E Challenge Results: Semantic Error Rate}
+    %\includegraphics[scale=.75]{tables/e2eautosem/e2eautosem.pdf} 
+        \begin{center}
+    \footnotesize
+    \begin{tabular}{rrrrr}
+        \toprule
+        & & & \multicolumn{2}{c}{Semantic Errors} \\
+        \cmidrule(lr){4-5}
+        \multicolumn{3}{c}{Model} & Count & Percent (\%)\\
+
+        \midrule 
+        \multicolumn{3}{c}{Seq2Seq Ensemble w/ reranking} & 67& \alert<2>{1.5} \\ 
+        \multicolumn{3}{c}{Learned Rules/Templates} & 76& \alert<2>{1.7} \\ 
+        \multicolumn{3}{c}{Manual Templates} & \textbf{0.0}& \textbf{0.0} \\
+        \midrule 
+        Base Generator $p_0$ & & greedy & 115&2.6 \\ 
+        &  & beam     & 83& 1.9 \\ 
+        Augmented Generator $p_*$  &  & greedy & 19& \alert<2>{0.4}\\
+                   &             & beam      & 3&\textbf{0.1}\\
+    %    \uncover<3->{  & Rule MR Parser $q$ & greedy  & \textbf{0}& \textbf{0.0}} \\ 
+    %    \uncover<3->{                      &  & beam          & \textbf{0}&\textbf{0.0}}\\
+        \bottomrule
+    \end{tabular}
+\end{center}
+
+
+    \uncover<2->{Augmented models more semantically correct than \alert<2>{ensemble Seq2Seq and rule-learning baselines,} even when using greedy decoding.}
+
+\end{frame}
+
+\begin{frame}[t]{E2E Challenge Results: Automatic Quality Measures}
+   \footnotesize
+\begin{center}
+\resizebox{\textwidth}{!}{
+\begin{tabular}{rrcccc}
+\toprule
+\multicolumn{2}{c}{Model}   & \textsc{Bleu} & \textsc{Rouge-L} & \textsc{Meteor} \\ \midrule
+%\only<1>{
+\multicolumn{2}{c}{Seq2Seq Ensemble w/ reranking}   & 66.19 ~~~~~~~~~~ & 67.72 ~~~~~~~~~~~ & \alert<5>{44.54} ~~~~~~~~~~~ \\  
+\multicolumn{2}{c}{Learned Rules/Templates} & \alert<3>{59.90} ~~~~~~~~~~ & \alert<4>{66.34} ~~~~~~~~~~~  & \alert<5>{43.46} ~~~~~~~~~~~ \\
+\multicolumn{2}{c}{Manual Templates}   & \alert<3>{56.57}~~~~~~~~~~~ & \alert<4>{66.14} ~~~~~~~~~~~ & 45.29 ~~~~~~~~~~~ \\
+        \midrule
+%} 
+%\only<2->{
+%Best Baseline   & 66.19 ~~~~~~~~~~ & 67.72 ~~~~~~~~~~~ & 45.29 ~~~~~~~~~~~ \\  
+%        \midrule
+%}
+%\uncover<3->{
+        \uncover<1->{Base Generator $p_0$ & & \alert<6->{\textbf{66.91}} ~~~~~~~~~~ & \alert<6->{\textbf{68.27}} ~~~~~~~~~~~~& 44.95~~~~~~~~~~~~} \\
+%                      beam & \textbf{67.13} &  \textbf{68.91} &  45.15  \\
+        \uncover<1->{Augmented Generator $p_*$ & & \alert<3>{63.76} \alert<2>{(-3.15)}~~&  \alert<4>{67.31} \alert<2>{(-0.96)}~~ &  \alert<5>{44.94} \alert<2>{(-0.01)}~~ } \\
+%        \uncover<1->{ & Rule MR Parser $q$   &  65.57 (-1.34)~ & 67.71 (-0.56)~~ & \textbf{45.56} (+0.61)  } \\
+    %                         beam & 66.28 &  68.08 &  \textbf{45.78}  \\
+    %\uncover<9->{     
+   %beam   & 
+% 64.23 &  67.54 &  45.17  \\
+%\midrule 
+
+%
+%?\uncover<6->{
+%?%
+%?   lex. $p_0$~~~~~~ & 60.35 ~~~~~~~~~~ &  64.51 ~~~~~~~~~~ & 41.82 ~~~~~~~~~~  \\
+%?%%                      beam   & 61.81 &  65.83 & 42.69  \\
+%?    $p_1$~$q_{\tiny \mathfrak{R}}$~ & 64.74 (+4.39) &  68.21 (+3.70) & 44.46 (+2.64) \\
+%?% %      beam & 64.81 &  67.83 &    44.39  
+%?%
+\bottomrule
+%} 
+\end{tabular}}
+\end{center}
+
+\begin{itemize}
+\item<2->{Self-training degrades automatic quality measures slightly compared to base model \uncover<3->{--
+Augmented generator still competitive with baselines.}}
+
+\item<6->{Base generator looks very competitive -- results here obtained with greedy decoding!} 
+\item<7->{\alert{But this is the most erroneous model!} Be wary of making decisions using only \textsc{Bleu} or \textsc{Rouge} in
+generation.
+}
+\end{itemize}
+%\only<7-8>{Lexicalized $p_0$ much weaker (expected). \\~\\}
+%\only<8>{Self-training yields larger improvements -- $p_1$ is competitive 
+%with baselines and delexicalized $p_0, p_1$!} 
+%
+%\only<10>{Performance also degrades under noisy MR parser condition ($q_\phi$).}
+%
+%\only<11>{Overall takeaway on automatic quality metrics: 
+%
+%\begin{itemize}
+%\item self training improves lexicalized model, 
+%\item modestly degrades performance on delexicalized models.
+%\end{itemize}} 
+\end{frame}
+
+\begin{frame}[t]{E2E Challenge Results: Human Evaluation}
+ %   \input{tables/e2ehuman.tex} 
+    Annotators compared 100 test set model ouputs against a human
+    reference w.r.t. \textbf{correctness} and \textbf{linguistic quality}.
+
+    ~\\
+    Model output is as good as or better than a human reference?\\
+
+    ~\\
+
+    \uncover<2->{
+
+    \begin{center}
+    \begin{tabular}{rll}
+        \toprule
+        & \textbf{Correctness} & \textbf{Linguistic Quality}\\
+        \midrule
+        Base Generator $p_0$ &     \uncover<3->{96\% of the time} & \uncover<5->{97\% of the time} \\
+        Augmented Generator $p_*$ & \uncover<4->{\textbf{100\% of time}}& \uncover<6->{\textbf{100\% of time}}\\
+        \bottomrule
+    \end{tabular}
+\end{center}
+    }
+
+%?    ~\\
+%?
+%?    \uncover<5->{
+%?    \begin{center}
+%?    \begin{tabular}{rl}
+%?        \toprule
+%?                &\textbf{Linguistic Quality}\\
+%?        \midrule
+%?        Base &     \uncover<6->{97\% of the time}\\
+%?        Faithful & \uncover<7->{\textbf{100\% of time}}\\
+%?        \bottomrule
+%?    \end{tabular}
+%?\end{center}
+%?    }
+%?
+
+
+
+    
+\end{frame}
+
+
+%%  
+%%  
+%%  
+%%  \begin{frame}{E2E Challenge Dataset Experiments}
+%%  
+%%      \only<1>{
+%%      \textbf{Metrics:}
+%%          \begin{itemize}
+%%              \item \textsc{Bleu, Rouge-L, Meteor}
+%%              \item \textsc{Semantic Error Rate (SER)} $= \frac{\# missing + \# incorrect + \# added}{\# attributes}$
+%%          \end{itemize}
+%%      }
+%%      
+%%  
+%%  %%      \only<2>{
+%%  %%      \textbf{Baselines} 
+%%  %%      \begin{itemize}
+%%  %%          \item Slug: ensemble of seq2seq models, overgenerate+reranking (Juraska et al., 2018)
+%%  %%          \item DANGNT: rule-based model (Nguyen and Tran, 2018) \nocite{nguyen2018structure}
+%%  %%          \item TUDA: template-based model (Puzikov and Gurevych, 2018) \nocite{puzikov2018e2e}
+%%  %%      \end{itemize}
+%%  %%  }
+%%  %%      
+%%  %%      
+%%  %%      \only<3>{
+%%  %%      \textbf{Model/Training Settings:}
+%%  %%      \begin{itemize}
+%%  %%          \item Base speaker  
+%%  %%          \item Faithful speaker  with rule-based MR 
+%%  %%              parser% $q_{\mathfrak{R}}$
+%%  %%          \item Faithful speaker with CNN classifier-based MR parser 
+%%  %%            %  $q_{\phi}$
+%%  %%      \end{itemize}
+%%  %%  %%    \begin{itemize}
+%%  %%  %%        \item With and without delexicalizing \textit{name} and \textit{near} 
+%%  %%  %%            fields. \\
+%%  %%  %%            \only<1-5>{
+%%  %%  %%            \begin{indentquote2}
+%%  %%  %%                \only<3>{Alimentum}\only<4>{\textbf{Alimentum}}\only<5>{\textbf{NAME}} 
+%%  %%  %%                    is a highly rated pub
+%%  %%  %%                    near
+%%  %%  %%                    \only<3>{Burger King}\only<4>{\textbf{Burger King}}
+%%  %%  %%                \only<5>{\textbf{NEAR}} 
+%%  %%  %%                \end{indentquote2}
+%%  %%  %%            }
+%%  %%  %%            \uncover<6->{
+%%  %%  %%            \begin{itemize}
+%%  %%  %%        \item Base model $p_0$ 
+%%  %%  %%        \item Augmented model $p_1$ with rule-based MR 
+%%  %%  %%            parser $q_{\mathfrak{R}}$
+%%  %%  %%%        \item Augmented model $p_1$ with CNN classifier-based MR parser 
+%%  %%  %%%            $q_{\phi}$
+%%  %%  %%            \end{itemize}
+%%  %%  %%        }
+%%  %%  %%%?        \uncover<7->{   
+%%  %%  %%%?        \item Delexicalized only:
+%%  %%  %%%?            \begin{itemize}
+%%  %%  %%%?        \item Augmented model $p_1$ with CNN-based MR 
+%%  %%  %%%?            parser $q_{\phi}$
+%%  %%  %%%?            \end{itemize}
+%%  %%  %%%?        }
+%%  %%  %%    \end{itemize}
+%%  %%  %
+%%  %%  }
+%%  \end{frame}
+%%  
+%%  \subsection{Results}
+%%  
+%%  \begin{frame}{Synthetic data has fewer spurious correlations.}
+%%  
+%%  
+%%  \includegraphics[width=\textwidth]{{"images/nlg/near=Burger King"}.png}
+%%  %\includegraphics[width=0.48\textwidth]{{"data/plots/name=Alimentum"}.png}
+%%  
+%%  %?\only<3>{
+%%  %?Training set PMI between ``near=Burger King'' and $X$ 
+%%  %?
+%%  %?\begin{center}
+%%  %?\includegraphics[width=0.75\textwidth]{{"data/plots/pwpmi"}.png}
+%%  %?\end{center}
+%%  %?}
+%%  
+%%  \end{frame}
+%%  
+%%  \begin{frame}{Synthetic data has fewer spurious correlations.}
+%%  \includegraphics[width=0.35\textwidth]{images/nlg/synthpmis.pdf}
+%%  \end{frame}
+%%  \begin{frame}{Synthetic data has fewer spurious correlations.}
+%%  \includegraphics[width=\textwidth]{images/nlg/heatmap_train.pdf}
+%%  \end{frame}
+
+\begin{frame}{Contributions}
+
+We introduce a data-augmentation method called
+Noise-Injection Sampling and Self-Training 
+\begin{itemize}
+\item We find that seq2seq models trained with this method are more faithful
+than baseline models, and
+\vspace{10pt}
+\item  the synthetic data does not  hurt model fluency/naturalness. 
+\vspace{10pt}
+\item  Closes gap between greedy and beam decoding+reranking.
+\end{itemize}
+
+\end{frame}
